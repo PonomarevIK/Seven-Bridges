@@ -137,7 +137,8 @@
         <StackPanel DockPanel.Dock="Left" Style="{StaticResource ToolPanel}">
             <RadioButton x:Name="r1" Checked="DragToolChecked" Unchecked="DragToolUnchecked" Tag="1">🤚</RadioButton>
             <RadioButton x:Name="r2" Checked="AddToolChecked" Unchecked="AddToolUnchecked" Tag="2">➕</RadioButton>
-            <RadioButton x:Name="r3" Checked="ConnectToolChecked" Unchecked="ConnectToolUnchecked" Tag="3">⬈</RadioButton>
+            <RadioButton x:Name="r3" Checked="DeleteToolChecked" Unchecked="DeleteToolUnchecked" Tag="3">❌</RadioButton>
+            <RadioButton x:Name="r4" Checked="ConnectToolChecked" Unchecked="ConnectToolUnchecked" Tag="4">⬈</RadioButton>
         </StackPanel>
 
         <Grid Margin="5" ClipToBounds="True" >

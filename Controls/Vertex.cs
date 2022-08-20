@@ -47,6 +47,7 @@ namespace Seven_Bridges.Controls
             Content = Index++;
         }
 
+        #region Edges
         public bool IsConnected(Vertex vertex)
         {
             if (vertex == this) return true;
@@ -61,11 +62,13 @@ namespace Seven_Bridges.Controls
 
             return true;
         }
-        public void AddEdgeFrom(Edge edge)
+        public bool TryAddEdgeFrom(Edge edge)
         {
             Edges.Add(edge);
             edge.V1 = this;
+            return true;
         }
+        #endregion
 
         #region Drag
         public void DragStart(Point grabPoint)
@@ -105,6 +108,16 @@ namespace Seven_Bridges.Controls
             Canvas.SetZIndex(this, 0);
         }
         #endregion
+
+        public void Delete()
+        {
+            foreach (var edge in Edges)
+            {
+                edge.Delete(this);
+            }
+            Edges.Clear();
+            (Parent as Panel).Children.Remove(this);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

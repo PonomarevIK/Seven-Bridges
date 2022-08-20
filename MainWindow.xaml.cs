@@ -57,6 +57,9 @@ namespace Seven_Bridges
         private void AddToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.AddToolSelected();
         private void AddToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.AddToolUnselected();
 
+        private void DeleteToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.DeleteToolSelected();
+        private void DeleteToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.DeleteToolUnselected();
+
         private void ConnectToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.ConnectToolSelected();
         private void ConnectToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.ConnectToolUnselected();
         #endregion

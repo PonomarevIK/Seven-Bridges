@@ -65,7 +65,8 @@ namespace Seven_Bridges.Controls
         }
         public Visibility WeightVisibility
         {
-            get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
+            //get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
+            get => Visibility.Hidden;
         }
 
         public Edge()
@@ -81,10 +82,19 @@ namespace Seven_Bridges.Controls
             OnPropertyChanged("WeightVisibility");
         }
 
-        public void Delete()
+        public void Delete(Vertex sourceVertex = null)
         {
-            v1?.Edges.Remove(this);
-            v2?.Edges.Remove(this);
+            if (v1 != null && v1 != sourceVertex)
+            {
+                v1.Edges.Remove(this);
+                v1 = null;
+            }
+            if (v2 != null && v2 != sourceVertex)
+            {
+                v2.Edges.Remove(this);
+                v2 = null;
+            }
+            (Parent as Panel).Children.Remove(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

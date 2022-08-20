@@ -49,18 +49,22 @@ namespace Seven_Bridges.Controls
         public void DragToolUnselected()
         {
             MouseLeftButtonDown -= CanvasGrab;
-            //MouseMove -= DragMouseMove;
-            //MouseLeftButtonUp -= DragStop;
         }
         public void AddToolSelected()
         {
             MouseLeftButtonDown += AddVertex;
-            //MouseRightButtonDown += DeleteVertex;
         }
         public void AddToolUnselected()
         {
             MouseLeftButtonDown -= AddVertex;
-            //MouseRightButtonDown -= DeleteVertex;
+        }
+        public void DeleteToolSelected()
+        {
+            MouseLeftButtonDown += DeleteItem;
+        }
+        public void DeleteToolUnselected()
+        {
+            MouseLeftButtonDown -= DeleteItem;
         }
         public void ConnectToolSelected()
         {
@@ -90,18 +94,6 @@ namespace Seven_Bridges.Controls
                     break;
             }
         }
-
-        #region Add
-        private void AddVertex(object sender, MouseButtonEventArgs eventArgs)
-        {
-            var clickPosition = eventArgs.GetPosition(this);
-            Children.Add(new Vertex(clickPosition.X, clickPosition.Y));
-        }
-        private void DeleteVertex(object sender, MouseButtonEventArgs eventArgs)
-        {
-            if (eventArgs.Source is Vertex vertex) Children.Remove(vertex);
-        }
-        #endregion
 
         #region Drag
         private void CanvasGrab(object sender, MouseButtonEventArgs eventArgs)
@@ -135,6 +127,64 @@ namespace Seven_Bridges.Controls
         {
             translateTransform.X = 0;
             translateTransform.Y = 0;
+        }
+        #endregion
+
+        #region Add
+        private void AddVertex(object sender, MouseButtonEventArgs eventArgs)
+        {
+            var clickPosition = eventArgs.GetPosition(this);
+            Children.Add(new Vertex(clickPosition.X, clickPosition.Y));
+        }
+        #endregion
+
+        #region Delete
+        private void DeleteItem(object sender, MouseButtonEventArgs eventArgs)
+        {
+            if (eventArgs.Source is Vertex vertex)
+            {
+                vertex.Delete();
+            }
+            else if (eventArgs.Source is Edge edge)
+            {
+                edge.Delete();
+            }
+        }
+        #endregion
+
+        #region Connect
+        private void ConnectStart(object sender, MouseButtonEventArgs eventArgs)
+        {
+            if (eventArgs.Source is Vertex v1)
+            {
+                MouseLeftButtonDown -= ConnectStart;
+                MouseLeftButtonDown += ConnectEnd;
+                MouseMove += ConnectMove;
+
+                activeEdge = new Edge();
+                Children.Add(activeEdge);
+                v1.TryAddEdgeFrom(activeEdge);
+            }
+        }
+        private void ConnectMove(object sender, MouseEventArgs eventArgs)
+        {
+            var mousePosition = eventArgs.GetPosition(this);
+            activeEdge.X2 = mousePosition.X;
+            activeEdge.Y2 = mousePosition.Y;
+        }
+        private void ConnectEnd(object sender, MouseButtonEventArgs eventArgs)
+        {
+
+            MouseLeftButtonDown += ConnectStart;
+            MouseLeftButtonDown -= ConnectEnd;
+            MouseMove -= ConnectMove;
+
+            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeTo(activeEdge)))
+            {
+                //Children.Remove(activeEdge);
+                activeEdge.Delete();
+            }
+            activeEdge = null;
         }
         #endregion
 
@@ -172,42 +222,6 @@ namespace Seven_Bridges.Controls
             zoomScale = 0;
             scaleTransform.ScaleX = 1;
             scaleTransform.ScaleY = 1;
-        }
-        #endregion
-
-        #region Connect
-        private void ConnectStart(object sender, MouseButtonEventArgs eventArgs)
-        {
-            if (eventArgs.Source is Vertex v1)
-            {
-                MouseLeftButtonDown -= ConnectStart;
-                MouseLeftButtonDown += ConnectEnd;
-                MouseMove += ConnectMove;
-
-                activeEdge = new Edge();
-                Children.Add(activeEdge);
-                v1.AddEdgeFrom(activeEdge);
-            }
-        }
-        private void ConnectMove(object sender, MouseEventArgs eventArgs)
-        {
-            var mousePosition = eventArgs.GetPosition(this);
-            activeEdge.X2 = mousePosition.X;
-            activeEdge.Y2 = mousePosition.Y;
-        }
-        private void ConnectEnd(object sender, MouseButtonEventArgs eventArgs)
-        {
-
-            MouseLeftButtonDown += ConnectStart;
-            MouseLeftButtonDown -= ConnectEnd;
-            MouseMove -= ConnectMove;
-
-            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeTo(activeEdge)))
-            {
-                Children.Remove(activeEdge);
-                activeEdge.Delete();
-            }
-            activeEdge = null;
         }
         #endregion
     }
