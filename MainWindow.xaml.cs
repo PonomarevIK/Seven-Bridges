@@ -27,24 +27,28 @@ namespace Seven_Bridges
 
         private void Debug(object sender, MouseButtonEventArgs eventArgs)
         {
-            string output;
-            void WhatType()
-            {
-                var src = eventArgs.Source.GetType();
-                var org = eventArgs.OriginalSource.GetType();
-                var snd = sender.GetType();
-                output = $" Source: {src}\nOriginal: {org}\nSender: {snd}";
-            }
-            void ElementPosition()
-            {
-                var element = (UIElement)sender;
-                output = $"{GraphCanvas.GetLeft(element)} ; {GraphCanvas.GetTop(element)}";
-            }
-            void MousePosition()
-            {
-                var cursor = eventArgs.GetPosition(sender as GraphCanvas);
-                output = $"{(int)cursor.X} ; {(int)cursor.Y}";
-            }
+            //string output;
+            //void WhatType()
+            //{
+            //    var src = eventArgs.Source.GetType();
+            //    var org = eventArgs.OriginalSource.GetType();
+            //    var snd = sender.GetType();
+            //    output = $" Source: {src}\nOriginal: {org}\nSender: {snd}";
+            //}
+            //void ElementPosition()
+            //{
+            //    var element = (UIElement)sender;
+            //    output = $"{GraphCanvas.GetLeft(element)} ; {GraphCanvas.GetTop(element)}";
+            //}
+            //void MousePosition()
+            //{
+            //    var cursor = eventArgs.GetPosition(sender as GraphCanvas);
+            //    output = $"{(int)cursor.X} ; {(int)cursor.Y}";
+            //}
+            //void GetWidth()
+            //{
+            //    output = (sender as TextBlock).ActualWidth.ToString();
+            //}
 
             //MessageBox.Show(output);
             //Console.WriteLine(output);
@@ -60,8 +64,11 @@ namespace Seven_Bridges
         private void DeleteToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.DeleteToolSelected();
         private void DeleteToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.DeleteToolUnselected();
 
-        private void ConnectToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.ConnectToolSelected();
-        private void ConnectToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.ConnectToolUnselected();
+        private void UndirectedEdgeToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.UndirectedEdgeToolSelected();
+        private void UndirectedEdgeToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.UndirectedEdgeToolUnselected();
+
+        private void DirectedEdgeToolChecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.DirectedEdgeToolSelected();
+        private void DirectedEdgeToolUnchecked(object sender, RoutedEventArgs eventArgs) => MyCanvas.DirectedEdgeToolUnselected();
         #endregion
 
 
@@ -91,7 +98,7 @@ namespace Seven_Bridges
         {
             var canvas = (GraphCanvas)sender;
             canvas.Initialize();
-            r2.IsChecked = true;
+            AddToolRadioButton.IsChecked = true;
         }
     }
 
@@ -118,7 +125,9 @@ namespace Seven_Bridges
         {
             if (values.All(isSet))
             {
-                return new Thickness(-System.Convert.ToDouble(values[0]) / 2.0, -System.Convert.ToDouble(values[1]) / 2.0, 0, 0);
+                double leftMargin = -System.Convert.ToDouble(values[0]) / 2;
+                double topMargin = -System.Convert.ToDouble(values[1]) / 2;
+                return new Thickness(leftMargin, topMargin, 0, 0);
             }
             return null;
         }

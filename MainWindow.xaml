@@ -34,14 +34,14 @@
             </Setter>
         </Style>
 
-        <Style TargetType="controls:Edge">
+        <Style TargetType="controls:UndirectedEdge">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="21"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:Edge">
+                    <ControlTemplate TargetType="controls:UndirectedEdge">
                         <Canvas>
-                            <Line StrokeThickness="4" Stroke="Black">
+                            <Line StrokeThickness="6" Stroke="Black">
                                 <Line.X1>
                                     <Binding Path="V1.CenterX"/>
                                 </Line.X1>
@@ -51,13 +51,13 @@
                                 <Line.X2>
                                     <PriorityBinding>
                                         <Binding Path="V2.CenterX"/>
-                                        <Binding Path="X2"/>
+                                        <Binding Path="FollowMouseX"/>
                                     </PriorityBinding>
                                 </Line.X2>
                                 <Line.Y2>
                                     <PriorityBinding>
                                         <Binding Path="V2.CenterY"/>
-                                        <Binding Path="Y2"/>
+                                        <Binding Path="FollowMouseY"/>
                                     </PriorityBinding>
                                 </Line.Y2>
                             </Line>
@@ -80,7 +80,7 @@
                                         <Binding Path="V2.CenterY"/>
                                     </MultiBinding>
                                 </Canvas.Top>
-                                <TextBlock Text="{Binding Weight}" Margin="3,0,3,0"/>
+                                <TextBlock Text="{Binding Weight}" Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" Cursor="IBeam" />
                             </Border>
                         </Canvas>
                     </ControlTemplate>
@@ -88,6 +88,60 @@
             </Setter>
         </Style>
 
+        <Style TargetType="controls:DirectedEdge">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="21"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="controls:DirectedEdge">
+                        <Canvas>
+                            <Line StrokeThickness="6" Stroke="Red">
+                                <Line.X1>
+                                    <Binding Path="V1.CenterX"/>
+                                </Line.X1>
+                                <Line.Y1>
+                                    <Binding Path="V1.CenterY"/>
+                                </Line.Y1>
+                                <Line.X2>
+                                    <PriorityBinding>
+                                        <Binding Path="V2.CenterX"/>
+                                        <Binding Path="FollowMouseX"/>
+                                    </PriorityBinding>
+                                </Line.X2>
+                                <Line.Y2>
+                                    <PriorityBinding>
+                                        <Binding Path="V2.CenterY"/>
+                                        <Binding Path="FollowMouseY"/>
+                                    </PriorityBinding>
+                                </Line.Y2>
+                            </Line>
+                            <Border Background="LightBlue" Visibility="{Binding WeightVisibility}" BorderBrush="Black" BorderThickness="1">
+                                <Border.Margin>
+                                    <MultiBinding Converter="{StaticResource CenteredMarginConverter}">
+                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
+                                        <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
+                                    </MultiBinding>
+                                </Border.Margin>
+                                <Canvas.Left>
+                                    <MultiBinding Converter="{StaticResource AverageValueConverter}">
+                                        <Binding Path="V1.CenterX"/>
+                                        <Binding Path="V2.CenterX"/>
+                                    </MultiBinding>
+                                </Canvas.Left>
+                                <Canvas.Top>
+                                    <MultiBinding Converter="{StaticResource AverageValueConverter}">
+                                        <Binding Path="V1.CenterY"/>
+                                        <Binding Path="V2.CenterY"/>
+                                    </MultiBinding>
+                                </Canvas.Top>
+                                <TextBlock Text="{Binding Weight}" Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" Cursor="IBeam" />
+                            </Border>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
         <Style TargetType="StackPanel" x:Key="ToolPanel">
             <Setter Property="Background" Value="White"/>
             <Style.Resources>
@@ -135,10 +189,11 @@
         </Menu>
 
         <StackPanel DockPanel.Dock="Left" Style="{StaticResource ToolPanel}">
-            <RadioButton x:Name="r1" Checked="DragToolChecked" Unchecked="DragToolUnchecked" Tag="1">🤚</RadioButton>
-            <RadioButton x:Name="r2" Checked="AddToolChecked" Unchecked="AddToolUnchecked" Tag="2">➕</RadioButton>
-            <RadioButton x:Name="r3" Checked="DeleteToolChecked" Unchecked="DeleteToolUnchecked" Tag="3">❌</RadioButton>
-            <RadioButton x:Name="r4" Checked="ConnectToolChecked" Unchecked="ConnectToolUnchecked" Tag="4">⬈</RadioButton>
+            <RadioButton x:Name="DragToolRadioButton" Checked="DragToolChecked" Unchecked="DragToolUnchecked" Tag="1">🤚</RadioButton>
+            <RadioButton x:Name="AddToolRadioButton" Checked="AddToolChecked" Unchecked="AddToolUnchecked" Tag="2">➕</RadioButton>
+            <RadioButton x:Name="DeleteToolRadioButton" Checked="DeleteToolChecked" Unchecked="DeleteToolUnchecked" Tag="3">❌</RadioButton>
+            <RadioButton x:Name="UndirectedEdgeToolRadioButton" Checked="UndirectedEdgeToolChecked" Unchecked="UndirectedEdgeToolUnchecked" Tag="4">/</RadioButton>
+            <RadioButton x:Name="DirectedEdgeToolRadioButton" Checked="DirectedEdgeToolChecked" Unchecked="DirectedEdgeToolUnchecked" Tag="5">⬈</RadioButton>
         </StackPanel>
 
         <Grid Margin="5" ClipToBounds="True" >

@@ -5,10 +5,9 @@ using System.Windows.Input;
 
 namespace Seven_Bridges.Controls
 {
-    public class Edge : UserControl, INotifyPropertyChanged
+    public class UndirectedEdge : BaseEdge
     {
-        private Vertex v1;
-        public Vertex V1
+        public override Vertex V1
         {
             get => v1;
             set
@@ -18,8 +17,7 @@ namespace Seven_Bridges.Controls
                 OnPropertyChanged("WeightVisibility");
             }
         }
-        private Vertex v2;
-        public Vertex V2
+        public override Vertex V2
         {
             get => v2;
             set
@@ -30,30 +28,26 @@ namespace Seven_Bridges.Controls
             }
         }
 
-        private double? x2;
-        public double X2
+        public override double FollowMouseX
         {
-            get => x2 ?? V1.CenterX;
+            get => followMouseX ?? V1.CenterX;
             set
             {
-                x2 = value;
-                OnPropertyChanged("X2");
+                followMouseX = value;
+                OnPropertyChanged("FollowMouseX");
             }
         }
-        private double? y2;
-        public double Y2
+        public override double FollowMouseY
         {
-            get => y2 ?? V1.CenterY;
+            get => followMouseY ?? V1.CenterY;
             set
             {
-                y2 = value;
-                OnPropertyChanged("Y2");
+                followMouseY = value;
+                OnPropertyChanged("FollowMouseY");
             }
         }
 
-        public bool IsDirected = false; // TODO
-        private int? weight;
-        public int? Weight
+        public override int? Weight
         {
             get => weight;
             set
@@ -63,13 +57,13 @@ namespace Seven_Bridges.Controls
                 OnPropertyChanged("WeightVisibility");
             }
         }
-        public Visibility WeightVisibility
+        public override Visibility WeightVisibility
         {
-            //get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
-            get => Visibility.Hidden;
+            get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
+            //get => Visibility.Hidden;
         }
 
-        public Edge()
+        public UndirectedEdge()
         {
             DataContext = this;
             Panel.SetZIndex(this, -1);
@@ -77,12 +71,7 @@ namespace Seven_Bridges.Controls
             MouseLeave += OnHover;
         }
 
-        private void OnHover(object sender, MouseEventArgs eventArgs)
-        {
-            OnPropertyChanged("WeightVisibility");
-        }
-
-        public void Delete(Vertex sourceVertex = null)
+        public override void Delete(Vertex sourceVertex = null)
         {
             if (v1 != null && v1 != sourceVertex)
             {
@@ -97,8 +86,8 @@ namespace Seven_Bridges.Controls
             (Parent as Panel).Children.Remove(this);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
+        public override event PropertyChangedEventHandler PropertyChanged;
+        protected override void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

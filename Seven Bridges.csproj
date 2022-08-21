@@ -63,8 +63,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\BaseEdge.cs" />
+    <Compile Include="Controls\DirectedEdge.cs" />
     <Compile Include="Controls\GraphCanvas.cs" />
-    <Compile Include="Controls\Edge.cs" />
+    <Compile Include="Controls\UndirectedEdge.cs" />
     <Compile Include="Controls\Vertex.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
