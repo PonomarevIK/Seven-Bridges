@@ -14,7 +14,7 @@ namespace Seven_Bridges.Controls
 
         public double Diameter => 40;
         private Point grabPoint;
-        public List<BaseEdge> Edges = new List<BaseEdge>();
+        public List<Edge> Edges = new List<Edge>();
 
         private Point position;
         public double X
@@ -51,10 +51,10 @@ namespace Seven_Bridges.Controls
         public bool IsConnected(Vertex vertex)
         {
             if (vertex == this) return true;
-            return Edges.Any((edge) => (edge.V1 == vertex && !(edge is DirectedEdge)) || (edge.V2 == vertex));
+            return Edges.Any((edge) => (edge.V1 == vertex && !(edge.IsDirected)) || (edge.V2 == vertex));
         }
 
-        public bool TryAddEdgeTo(BaseEdge edge)
+        public bool TryAddEdgeTo(Edge edge)
         {
             if (edge.V1.IsConnected(this)) return false;
             Edges.Add(edge);
@@ -62,7 +62,7 @@ namespace Seven_Bridges.Controls
 
             return true;
         }
-        public bool TryAddEdgeFrom(BaseEdge edge)
+        public bool TryAddEdgeFrom(Edge edge)
         {
             Edges.Add(edge);
             edge.V1 = this;
@@ -111,7 +111,7 @@ namespace Seven_Bridges.Controls
 
         public void Delete()
         {
-            foreach (var edge in Edges)
+            foreach (Edge edge in Edges)
             {
                 edge.Delete(this);
             }

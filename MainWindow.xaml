@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Seven_Bridges"
         xmlns:controls="clr-namespace:Seven_Bridges.Controls"
+        xmlns:converters="clr-namespace:Seven_Bridges.Converters"
         mc:Ignorable="d"
         Title="Graph App"
         Height="600" Width="900">
     <Window.Resources>
 
-        <local:AverageValue x:Key="AverageValueConverter"/>
-        <local:CenteredMargin x:Key="CenteredMarginConverter"/>
-        <local:DirectedEdgeArrowPosition x:Key="ArrowPosition"/>
+        <converters:AverageValue x:Key="AverageValueConverter"/>
+        <converters:CenteredMargin x:Key="CenteredMarginConverter"/>
+        <converters:DirectedEdgeArrowPosition x:Key="ArrowPosition"/>
 
         <Style TargetType="controls:Vertex">
             <Setter Property="Background" Value="LightBlue"/>
@@ -35,67 +36,13 @@
             </Setter>
         </Style>
 
-        <Style TargetType="controls:UndirectedEdge">
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="FontSize" Value="21"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="controls:UndirectedEdge">
-                        <Canvas>
-                            <Line StrokeThickness="7" Stroke="Black">
-                                <Line.X1>
-                                    <Binding Path="V1.CenterX"/>
-                                </Line.X1>
-                                <Line.Y1>
-                                    <Binding Path="V1.CenterY"/>
-                                </Line.Y1>
-                                <Line.X2>
-                                    <PriorityBinding>
-                                        <Binding Path="V2.CenterX"/>
-                                        <Binding Path="FollowMouseX"/>
-                                    </PriorityBinding>
-                                </Line.X2>
-                                <Line.Y2>
-                                    <PriorityBinding>
-                                        <Binding Path="V2.CenterY"/>
-                                        <Binding Path="FollowMouseY"/>
-                                    </PriorityBinding>
-                                </Line.Y2>
-                            </Line>
-                            <Border Background="LightBlue" Visibility="{Binding WeightVisibility}" BorderBrush="Black" BorderThickness="1">
-                                <Border.Margin>
-                                    <MultiBinding Converter="{StaticResource CenteredMarginConverter}">
-                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
-                                        <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
-                                    </MultiBinding>
-                                </Border.Margin>
-                                <Canvas.Left>
-                                    <MultiBinding Converter="{StaticResource AverageValueConverter}">
-                                        <Binding Path="V1.CenterX"/>
-                                        <Binding Path="V2.CenterX"/>
-                                    </MultiBinding>
-                                </Canvas.Left>
-                                <Canvas.Top>
-                                    <MultiBinding Converter="{StaticResource AverageValueConverter}">
-                                        <Binding Path="V1.CenterY"/>
-                                        <Binding Path="V2.CenterY"/>
-                                    </MultiBinding>
-                                </Canvas.Top>
-                                <TextBlock Text="{Binding Weight}" Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" Cursor="IBeam" />
-                            </Border>
-                        </Canvas>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="controls:DirectedEdge">
+        <Style TargetType="controls:Edge">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="21"/>
             <Setter Property="BorderThickness" Value="5"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:DirectedEdge">
+                    <ControlTemplate TargetType="controls:Edge">
                         <Canvas>
                             <Line StrokeThickness="5" Stroke="Black">
                                 <Line.X1>
@@ -120,6 +67,7 @@
                             <Polygon Fill="Black" Stroke="Black" StrokeThickness="5">
                                 <Polygon.Points>
                                     <MultiBinding Converter="{StaticResource ArrowPosition}">
+                                        <Binding Path="IsDirected"/>
                                         <Binding Path="V1.CenterX"/>
                                         <Binding Path="V1.CenterY"/>
                                         <Binding Path="V2.CenterX"/>
@@ -149,7 +97,7 @@
                                         <Binding Path="V2.CenterY"/>
                                     </MultiBinding>
                                 </Canvas.Top>
-                                <TextBlock Text="{Binding Weight}" Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" Cursor="IBeam" />
+                                <TextBox Text="{Binding Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" Background="LightBlue" BorderThickness="0" MaxLength="5"/>
                             </Border>
                         </Canvas>
                     </ControlTemplate>

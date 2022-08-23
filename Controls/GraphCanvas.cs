@@ -9,7 +9,7 @@ namespace Seven_Bridges.Controls
     public class GraphCanvas : Canvas
     {
         Point prevMousePosition;
-        BaseEdge activeEdge;
+        Edge activeEdge;
 
         int zoomScale = 0;
         const double zoomInFactor = 1.2;
@@ -152,7 +152,7 @@ namespace Seven_Bridges.Controls
             {
                 vertex.Delete();
             }
-            else if (eventArgs.Source is BaseEdge edge)
+            else if (eventArgs.Source is Edge edge)
             {
                 edge.Delete();
             }
@@ -165,7 +165,8 @@ namespace Seven_Bridges.Controls
             if (eventArgs.Source is Vertex v1)
             {
                 MouseLeftButtonDown -= DirectedEdgeStart;
-                activeEdge = new DirectedEdge();
+                activeEdge = new Edge();
+                activeEdge.IsDirected = true;
                 ConnectStart(v1);
             }
         }
@@ -174,7 +175,8 @@ namespace Seven_Bridges.Controls
             if (eventArgs.Source is Vertex v1)
             {
                 MouseLeftButtonDown -= UndirectedEdgeStart;
-                activeEdge = new UndirectedEdge();
+                activeEdge = new Edge();
+                activeEdge.IsDirected = false;
                 ConnectStart(v1);
             }
         }
@@ -194,14 +196,13 @@ namespace Seven_Bridges.Controls
         }
         private void ConnectEnd(object sender, MouseButtonEventArgs eventArgs)
         {
-            if (activeEdge is DirectedEdge)
+            if (activeEdge.IsDirected)
             {
                 MouseLeftButtonDown += DirectedEdgeStart;
             }
-            else if (activeEdge is UndirectedEdge)
+            else
             {
                 MouseLeftButtonDown += UndirectedEdgeStart;
-
             }
             MouseMove -= ConnectMove;
             MouseLeftButtonDown -= ConnectEnd;
