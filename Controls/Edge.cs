@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Windows;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows;
 
 namespace Seven_Bridges.Controls
 {
@@ -90,16 +85,12 @@ namespace Seven_Bridges.Controls
             Panel.SetZIndex(this, -1);
             MouseEnter += OnHover;
             MouseLeave += OnHover;
-            MouseRightButtonDown += Debug;
         }
 
         private void OnHover(object sender, MouseEventArgs eventArgs)
         {
             OnPropertyChanged("WeightVisibility");
         }
-
-        //private void Debug(object sender, MouseButtonEventArgs eventArgs) => MessageBox.Show($"{weight}");
-        private void Debug(object sender, MouseButtonEventArgs eventArgs) => Keyboard.ClearFocus();
 
         public void Delete(Vertex sourceVertex = null)
         {

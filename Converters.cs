@@ -67,18 +67,20 @@ namespace Seven_Bridges.Converters
 
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (!(bool)values[(int)BoundValues.IsDirected]) return null;
+            object Unpack(BoundValues value) => values[(int)value];
+
+            if (!(bool)Unpack(BoundValues.IsDirected)) return null;
 
             PointCollection result = new PointCollection();
             if (values.All(isSet))
             {
-                Point origin = new Point(System.Convert.ToDouble(values[(int)BoundValues.V1_X]), System.Convert.ToDouble(values[(int)BoundValues.V1_Y]));
-                Point destination = new Point(System.Convert.ToDouble(values[(int)BoundValues.V2_X]), System.Convert.ToDouble(values[(int)BoundValues.V2_Y]));
+                Point origin = new Point((double)Unpack(BoundValues.V1_X), (double)Unpack(BoundValues.V1_Y));
+                Point destination = new Point((double)Unpack(BoundValues.V2_X), (double)Unpack(BoundValues.V2_Y));
                 Vector edgeVector = destination - origin;
-                double vertexRadius = System.Convert.ToDouble(values[(int)BoundValues.V2_diameter]) / 2;
+                double vertexRadius = (double)Unpack(BoundValues.V2_diameter) / 2;
                 double vectorLength = edgeVector.Length;
                 double ratio = vertexRadius / vectorLength;
-                double lineThickness = System.Convert.ToDouble(values[(int)BoundValues.LineThickness]);
+                double lineThickness = (double)Unpack(BoundValues.LineThickness);
 
                 Point triangleTopPoint = destination - edgeVector * ratio;
                 Point triangleBaseCenter = triangleTopPoint - edgeVector * (2 * lineThickness / vectorLength);
