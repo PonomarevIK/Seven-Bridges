@@ -137,4 +137,56 @@ namespace Seven_Bridges
             throw new NotImplementedException();
         }
     }
+
+    public class DirectedEdgeArrowPosition : IMultiValueConverter
+    {
+        private static Func<object, bool> isSet = (value) => value != DependencyProperty.UnsetValue;
+
+        private static (Vector, Vector) GetPerpendicularVectors(Vector vector, double length = 1)
+        {
+            Vector vector1 = new Vector(vector.Y, -vector.X);
+            vector1.Normalize();
+            Vector vector2 = new Vector(-vector.Y, vector.X);
+            vector2.Normalize();
+            return (vector1 * length, vector2 * length);
+        }
+        private enum BoundValues : int
+        {
+            V1_X,
+            V1_Y,
+            V2_X,
+            V2_Y,
+            V2_diameter,
+            LineThickness,
+        }
+
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            PointCollection result = new PointCollection();
+            if (values.All(isSet))
+            {
+                Point origin      = new Point(System.Convert.ToDouble(values[(int)BoundValues.V1_X]), System.Convert.ToDouble(values[(int)BoundValues.V1_Y]));
+                Point destination = new Point(System.Convert.ToDouble(values[(int)BoundValues.V2_X]), System.Convert.ToDouble(values[(int)BoundValues.V2_Y]));
+                Vector edgeVector = destination - origin;
+                double vertexRadius = System.Convert.ToDouble(values[(int)BoundValues.V2_diameter]) / 2;
+                double vectorLength = edgeVector.Length;
+                double ratio = vertexRadius / vectorLength;
+                double lineThickness = System.Convert.ToDouble(values[(int)BoundValues.LineThickness]);
+
+                Point triangleTopPoint = destination - edgeVector * ratio;
+                Point triangleBaseCenter = triangleTopPoint - edgeVector * (2 * lineThickness / vectorLength);
+                (Vector left, Vector right) = GetPerpendicularVectors(edgeVector, lineThickness);
+                result.Add(triangleTopPoint);
+                result.Add(triangleBaseCenter + left);
+                result.Add(triangleBaseCenter + right);
+                return result;
+            }
+            return null;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

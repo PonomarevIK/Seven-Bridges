@@ -59,8 +59,8 @@ namespace Seven_Bridges.Controls
         }
         public override Visibility WeightVisibility
         {
-            get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
-            //get => Visibility.Hidden;
+            //get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
+            get => Visibility.Hidden;
         }
 
         public UndirectedEdge()

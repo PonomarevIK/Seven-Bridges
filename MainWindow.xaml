@@ -12,6 +12,7 @@
 
         <local:AverageValue x:Key="AverageValueConverter"/>
         <local:CenteredMargin x:Key="CenteredMarginConverter"/>
+        <local:DirectedEdgeArrowPosition x:Key="ArrowPosition"/>
 
         <Style TargetType="controls:Vertex">
             <Setter Property="Background" Value="LightBlue"/>
@@ -41,7 +42,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:UndirectedEdge">
                         <Canvas>
-                            <Line StrokeThickness="6" Stroke="Black">
+                            <Line StrokeThickness="7" Stroke="Black">
                                 <Line.X1>
                                     <Binding Path="V1.CenterX"/>
                                 </Line.X1>
@@ -91,11 +92,12 @@
         <Style TargetType="controls:DirectedEdge">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="21"/>
+            <Setter Property="BorderThickness" Value="5"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:DirectedEdge">
                         <Canvas>
-                            <Line StrokeThickness="6" Stroke="Red">
+                            <Line StrokeThickness="5" Stroke="Black">
                                 <Line.X1>
                                     <Binding Path="V1.CenterX"/>
                                 </Line.X1>
@@ -115,6 +117,19 @@
                                     </PriorityBinding>
                                 </Line.Y2>
                             </Line>
+                            <Polygon Fill="Black" Stroke="Black" StrokeThickness="5">
+                                <Polygon.Points>
+                                    <MultiBinding Converter="{StaticResource ArrowPosition}">
+                                        <Binding Path="V1.CenterX"/>
+                                        <Binding Path="V1.CenterY"/>
+                                        <Binding Path="V2.CenterX"/>
+                                        <Binding Path="V2.CenterY"/>
+                                        <Binding Path="V2.Diameter"/>
+                                        <Binding Path="StrokeThickness" RelativeSource="{RelativeSource Self}"/>
+                                    </MultiBinding>
+                                </Polygon.Points>
+                            </Polygon>
+                            
                             <Border Background="LightBlue" Visibility="{Binding WeightVisibility}" BorderBrush="Black" BorderThickness="1">
                                 <Border.Margin>
                                     <MultiBinding Converter="{StaticResource CenteredMarginConverter}">
