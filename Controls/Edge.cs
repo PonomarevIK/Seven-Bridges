@@ -108,7 +108,7 @@ namespace Seven_Bridges.Controls
         }
 
         public void Unfocus(object sender, MouseEventArgs eventArgs)
-        { 
+        {
             Keyboard.Focus(Parent as IInputElement);
             if (weightStr == String.Empty)
             {

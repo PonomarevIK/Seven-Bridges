@@ -118,7 +118,6 @@ namespace Seven_Bridges.Controls
             {
                 vertex.DragStart(eventArgs.GetPosition(vertex));
             }
-
         }
         private void DragMouseMove(object sender, MouseEventArgs eventArgs)
         {

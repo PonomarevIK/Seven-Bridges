@@ -72,32 +72,37 @@ namespace Seven_Bridges
         #endregion
 
 
-        private void KeyCommand(object sender, KeyEventArgs e)
+        private void KeyCommand(object sender, KeyEventArgs eventArgs)
         {
-            //switch (e.Key)
-            //{
-            //    case Key.Escape:
-            //        Close();
-            //        break;
-            //    case Key.D1:
-            //    case Key.NumPad1:
-            //        r1.IsChecked = true;
-            //        break;
-            //    case Key.D2:
-            //    case Key.NumPad2:
-            //        r2.IsChecked = true;
-            //        break;
-            //    case Key.D3:
-            //    case Key.NumPad3:
-            //        r3.IsChecked = true;
-            //        break;
-            //}
+            if (eventArgs.Source != MyCanvas) return;
+            switch (eventArgs.Key)
+            {
+                case Key.D1:
+                case Key.NumPad1:
+                    DragToolRadioButton.IsChecked = true;
+                    break;
+                case Key.D2:
+                case Key.NumPad2:
+                    AddToolRadioButton.IsChecked = true;
+                    break;
+                case Key.D3:
+                case Key.NumPad3:
+                    DeleteToolRadioButton.IsChecked = true;
+                    break;
+                case Key.D4:
+                case Key.NumPad4:
+                    UndirectedEdgeToolRadioButton.IsChecked = true;
+                    break;
+                case Key.D5:
+                case Key.NumPad5:
+                    DirectedEdgeToolRadioButton.IsChecked = true;
+                    break;
+            }
         }
 
-        private void OnCanvasLoaded(object sender, RoutedEventArgs e)
+        private void Initialize(object sender, RoutedEventArgs eventArgs)
         {
-            var canvas = (GraphCanvas)sender;
-            canvas.Initialize();
+            MyCanvas.Initialize();
             AddToolRadioButton.IsChecked = true;
         }
     }
