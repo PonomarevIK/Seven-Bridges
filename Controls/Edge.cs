@@ -1,7 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Data;
+using System.Linq;
 
 namespace Seven_Bridges.Controls
 {
@@ -51,21 +54,31 @@ namespace Seven_Bridges.Controls
             }
         }
 
-        private int? weight;
-        public int? Weight
+        private float weight = 1;
+        public float Weight
         {
             get => weight;
             set
             {
                 weight = value;
                 OnPropertyChanged("Weight");
+                OnPropertyChanged("WeightStr");
                 OnPropertyChanged("WeightVisibility");
+            }
+        }
+        private string weightStr;
+        public string WeightStr
+        {
+            get => Weight.ToString();
+            set
+            {
+                weightStr = value;
+                Weight = Convert.ToSingle(value);
             }
         }
         public Visibility WeightVisibility
         {
-            get => (v1 != null && v2 != null && (weight.HasValue || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
-            //get => Visibility.Hidden;
+            get => (v1 != null && v2 != null && (weight != 1 || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
         }
 
         private bool isDirected;
@@ -85,11 +98,30 @@ namespace Seven_Bridges.Controls
             Panel.SetZIndex(this, -1);
             MouseEnter += OnHover;
             MouseLeave += OnHover;
+            MouseLeave += Unfocus;
+            PreviewTextInput += ValidateWeightInput;
         }
 
         private void OnHover(object sender, MouseEventArgs eventArgs)
         {
             OnPropertyChanged("WeightVisibility");
+        }
+
+        public void Unfocus(object sender, MouseEventArgs eventArgs)
+        { 
+            Keyboard.Focus(Parent as IInputElement);
+            if (weightStr == String.Empty)
+            {
+                Weight = 1;
+            }
+        }
+
+        public void ValidateWeightInput(object sender, TextCompositionEventArgs eventArgs)
+        {
+            if (!(eventArgs.Text.All(Char.IsDigit) || eventArgs.Text == "."))
+            {
+                eventArgs.Handled = true;
+            }
         }
 
         public void Delete(Vertex sourceVertex = null)

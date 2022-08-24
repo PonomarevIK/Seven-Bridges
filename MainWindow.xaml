@@ -97,9 +97,9 @@
                                         <Binding Path="V2.CenterY"/>
                                     </MultiBinding>
                                 </Canvas.Top>
-                                <TextBox Text="{Binding Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox Text="{Binding WeightStr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                          Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" 
-                                         Background="LightBlue" BorderThickness="0" MaxLength="5"/>
+                                         Background="LightBlue" BorderThickness="0" MaxLength="9"/>
                             </Border>
                         </Canvas>
                     </ControlTemplate>
