@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Data;
 using System.Linq;
+using System.Globalization;
 
 namespace Seven_Bridges.Controls
 {
@@ -54,10 +55,10 @@ namespace Seven_Bridges.Controls
             }
         }
 
-        private float weight = 1;
+        private float? weight;
         public float Weight
         {
-            get => weight;
+            get => weight ?? 1;
             set
             {
                 weight = value;
@@ -66,19 +67,24 @@ namespace Seven_Bridges.Controls
                 OnPropertyChanged("WeightVisibility");
             }
         }
-        private string weightStr;
         public string WeightStr
         {
             get => Weight.ToString();
             set
             {
-                weightStr = value;
-                Weight = Convert.ToSingle(value);
+                try
+                {
+                    Weight = Convert.ToSingle(value, CultureInfo.InvariantCulture);
+                }
+                catch (FormatException)
+                {
+                    Weight = 1;
+                }
             }
         }
         public Visibility WeightVisibility
         {
-            get => (v1 != null && v2 != null && (weight != 1 || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
+            get => (v1 != null && v2 != null && (Weight != 1 || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
         }
 
         private bool isDirected;
@@ -110,15 +116,11 @@ namespace Seven_Bridges.Controls
         public void Unfocus(object sender, MouseEventArgs eventArgs)
         {
             Keyboard.Focus(Parent as IInputElement);
-            if (weightStr == String.Empty)
-            {
-                Weight = 1;
-            }
         }
 
         public void ValidateWeightInput(object sender, TextCompositionEventArgs eventArgs)
         {
-            if (!(eventArgs.Text.All(Char.IsDigit) || eventArgs.Text == "."))
+            if (!eventArgs.Text.All(Char.IsDigit) && eventArgs.Text != ".")
             {
                 eventArgs.Handled = true;
             }

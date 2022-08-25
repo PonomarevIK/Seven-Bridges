@@ -53,10 +53,29 @@ namespace Seven_Bridges.Controls
             if (vertex == this) return true;
             return Edges.Any((edge) => (edge.V1 == vertex && !(edge.IsDirected)) || (edge.V2 == vertex));
         }
+        public bool IsConnected(Vertex vertex, out Edge connectingEdge)
+        {
+            connectingEdge = null;
+            if (vertex == this) return true;
+            foreach (Edge edge in Edges)
+            {
+                if ((edge.V1 == vertex && !(edge.IsDirected)) || (edge.V2 == vertex))
+                {
+                    connectingEdge = edge;
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public bool TryAddEdgeTo(Edge edge)
         {
             if (edge.V1.IsConnected(this)) return false;
+            else if (this.IsConnected(edge.V1, out Edge connectingEdge))
+            {
+                connectingEdge.IsDirected = false;
+                return false;
+            }
             Edges.Add(edge);
             edge.V2 = this;
 
@@ -66,6 +85,7 @@ namespace Seven_Bridges.Controls
         {
             Edges.Add(edge);
             edge.V1 = this;
+
             return true;
         }
         #endregion
