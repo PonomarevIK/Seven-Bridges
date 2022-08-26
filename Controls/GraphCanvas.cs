@@ -21,6 +21,10 @@ namespace Seven_Bridges.Controls
         readonly ScaleTransform scaleTransform;
         readonly TranslateTransform translateTransform;
 
+        static GraphCanvas()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(GraphCanvas), new FrameworkPropertyMetadata(typeof(GraphCanvas)));
+        }
         public GraphCanvas()
         {
             // Visual transformations

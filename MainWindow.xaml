@@ -4,115 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Seven_Bridges.Controls"
-        xmlns:converters="clr-namespace:Seven_Bridges.Converters"
         mc:Ignorable="d"
         Title="Graph App"
         Loaded="Initialize"
         Height="600" Width="900">
     <Window.Resources>
 
-        <converters:AverageValue x:Key="AverageValueConverter"/>
-        <converters:CenteredMargin x:Key="CenteredMarginConverter"/>
-        <converters:DirectedEdgeArrowPosition x:Key="ArrowPosition"/>
-
-        <Style TargetType="controls:Vertex">
-            <Setter Property="Background" Value="LightBlue"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="FontSize" Value="21"/>
-            <Setter Property="Canvas.Left" Value="{Binding X}"/>
-            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="controls:Vertex">
-                        <Grid>
-                            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}" 
-                                     Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}"
-                                     StrokeThickness="2"/>
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="controls:Edge">
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="FontSize" Value="21"/>
-            <Setter Property="BorderThickness" Value="5"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="controls:Edge">
-                        <Canvas>
-                            <Line StrokeThickness="5" Stroke="Black">
-                                <Line.X1>
-                                    <Binding Path="V1.CenterX"/>
-                                </Line.X1>
-                                <Line.Y1>
-                                    <Binding Path="V1.CenterY"/>
-                                </Line.Y1>
-                                <Line.X2>
-                                    <PriorityBinding>
-                                        <Binding Path="V2.CenterX"/>
-                                        <Binding Path="FollowMouseX"/>
-                                    </PriorityBinding>
-                                </Line.X2>
-                                <Line.Y2>
-                                    <PriorityBinding>
-                                        <Binding Path="V2.CenterY"/>
-                                        <Binding Path="FollowMouseY"/>
-                                    </PriorityBinding>
-                                </Line.Y2>
-                            </Line>
-                            <Polygon Fill="Black" Stroke="Black" StrokeThickness="5">
-                                <Polygon.Points>
-                                    <MultiBinding Converter="{StaticResource ArrowPosition}">
-                                        <Binding Path="IsDirected"/>
-                                        <Binding Path="V1.CenterX"/>
-                                        <Binding Path="V1.CenterY"/>
-                                        <Binding Path="V2.CenterX"/>
-                                        <Binding Path="V2.CenterY"/>
-                                        <Binding Path="V2.Diameter"/>
-                                        <Binding Path="StrokeThickness" RelativeSource="{RelativeSource Self}"/>
-                                    </MultiBinding>
-                                </Polygon.Points>
-                            </Polygon>
-                            
-                            <Border Background="LightBlue" Visibility="{Binding WeightVisibility}" BorderBrush="Black" BorderThickness="1">
-                                <Border.Margin>
-                                    <MultiBinding Converter="{StaticResource CenteredMarginConverter}">
-                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
-                                        <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
-                                    </MultiBinding>
-                                </Border.Margin>
-                                <Canvas.Left>
-                                    <MultiBinding Converter="{StaticResource AverageValueConverter}">
-                                        <Binding Path="V1.CenterX"/>
-                                        <Binding Path="V2.CenterX"/>
-                                    </MultiBinding>
-                                </Canvas.Left>
-                                <Canvas.Top>
-                                    <MultiBinding Converter="{StaticResource AverageValueConverter}">
-                                        <Binding Path="V1.CenterY"/>
-                                        <Binding Path="V2.CenterY"/>
-                                    </MultiBinding>
-                                </Canvas.Top>
-                                <TextBox Text="{Binding WeightStr, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                                         Margin="3,0,3,0" MinWidth="16" TextAlignment="Center" 
-                                         Background="LightBlue" BorderThickness="0" MaxLength="9"/>
-                            </Border>
-                        </Canvas>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <LinearGradientBrush x:Key="UncheckedToolButtonShadow" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="LightGray" Offset="0.75"/>
+            <GradientStop Color="Gray" Offset="1"/>
+        </LinearGradientBrush>
         
+        <LinearGradientBrush x:Key="СheckedToolButtonShadow" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="LimeGreen" Offset="0.75"/>
+            <GradientStop Color="DarkGreen" Offset="1"/>
+        </LinearGradientBrush>
+
         <Style TargetType="StackPanel" x:Key="ToolPanel">
             <Setter Property="Background" Value="White"/>
             <Style.Resources>
                 <Style TargetType="RadioButton">
                     <Setter Property="Margin" Value="2"/>
-                    <Setter Property="Background" Value="LightGray"/>
+                    <Setter Property="Background" Value="{StaticResource UncheckedToolButtonShadow}"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="Focusable" Value="False"/>
@@ -130,11 +43,10 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsChecked" Value="True">
-                                        <Setter Property="Background" Value="LimeGreen"/>
+                                        <Setter Property="Background" Value="{StaticResource СheckedToolButtonShadow}"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="BorderThickness" Value="2"/>
-                                        <Setter Property="BorderBrush" Value="Black"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>

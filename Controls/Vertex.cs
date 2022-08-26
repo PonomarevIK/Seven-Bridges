@@ -39,7 +39,11 @@ namespace Seven_Bridges.Controls
         }
         public double CenterX => position.X + Diameter / 2;
         public double CenterY => position.Y + Diameter / 2;
-
+        
+        static Vertex()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Vertex), new FrameworkPropertyMetadata(typeof(Vertex)));
+        }
         public Vertex(double x, double y)
         {
             DataContext = this;
@@ -95,7 +99,6 @@ namespace Seven_Bridges.Controls
         {
             CaptureMouse();
             this.grabPoint = grabPoint;
-            Background = Brushes.LightCyan;
             MouseMove += DragMouseMove;
             MouseLeftButtonUp += DragStop;
             Canvas.SetZIndex(this, 1);
@@ -122,7 +125,6 @@ namespace Seven_Bridges.Controls
         private void DragStop(object sender, MouseEventArgs eventArgs)
         {
             ReleaseMouseCapture();
-            Background = Brushes.LightBlue;
             MouseMove -= DragMouseMove;
             MouseLeftButtonUp -= DragStop;
             Canvas.SetZIndex(this, 0);

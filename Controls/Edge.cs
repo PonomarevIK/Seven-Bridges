@@ -97,7 +97,11 @@ namespace Seven_Bridges.Controls
                 OnPropertyChanged("IsDirected");
             }
         }
-
+        
+        static Edge()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Edge), new FrameworkPropertyMetadata(typeof(Edge)));
+        }
         public Edge()
         {
             DataContext = this;
