@@ -3,6 +3,8 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Collections.Generic;
+using System;
 
 namespace Seven_Bridges.Controls
 {
@@ -45,8 +47,27 @@ namespace Seven_Bridges.Controls
             scaleTransform.CenterY = Height / 2;
         }
 
+        public IEnumerable<Vertex> GetVertices()
+        {
+            foreach (UIElement element in Children)
+            {
+                if (element is Vertex vertex) yield return vertex;
+            }
+        }
+        public int CountVertices
+        {
+            get
+            {
+                int count = 0;
+                foreach (UIElement element in Children)
+                {
+                    if (element is Vertex) count++;
+                }
+                return count;
+            }
+        }
+
         #region Tool Selection Events
-        // TODO: add failsaves
         public void DragToolSelected()
         {
             MouseLeftButtonDown += CanvasGrab;
@@ -54,6 +75,7 @@ namespace Seven_Bridges.Controls
         public void DragToolUnselected()
         {
             MouseLeftButtonDown -= CanvasGrab;
+            DragStop(null, null);
         }
         public void AddToolSelected()
         {
@@ -78,6 +100,10 @@ namespace Seven_Bridges.Controls
         public void UndirectedEdgeToolUnselected()
         {
             MouseLeftButtonDown -= UndirectedEdgeStart;
+            MouseMove -= ConnectMove;
+            MouseLeftButtonDown -= ConnectEnd;
+            activeEdge?.Delete();
+            activeEdge = null;
         }
         public void DirectedEdgeToolSelected()
         {
@@ -86,6 +112,10 @@ namespace Seven_Bridges.Controls
         public void DirectedEdgeToolUnselected()
         {
             MouseLeftButtonDown -= DirectedEdgeStart;
+            MouseMove -= ConnectMove;
+            MouseLeftButtonDown -= ConnectEnd;
+            activeEdge?.Delete();
+            activeEdge = null;
         }
         #endregion
 

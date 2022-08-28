@@ -25,33 +25,10 @@ namespace Seven_Bridges
             InitializeComponent();
         }
 
-        private void Debug(object sender, MouseButtonEventArgs eventArgs)
+        private void InitializeWindow(object sender, RoutedEventArgs eventArgs)
         {
-            //string output;
-            //void WhatType()
-            //{
-            //    var src = eventArgs.Source.GetType();
-            //    var org = eventArgs.OriginalSource.GetType();
-            //    var snd = sender.GetType();
-            //    output = $" Source: {src}\nOriginal: {org}\nSender: {snd}";
-            //}
-            //void ElementPosition()
-            //{
-            //    var element = (UIElement)sender;
-            //    output = $"{GraphCanvas.GetLeft(element)} ; {GraphCanvas.GetTop(element)}";
-            //}
-            //void MousePosition()
-            //{
-            //    var cursor = eventArgs.GetPosition(sender as GraphCanvas);
-            //    output = $"{(int)cursor.X} ; {(int)cursor.Y}";
-            //}
-            //void GetWidth()
-            //{
-            //    output = (sender as TextBlock).ActualWidth.ToString();
-            //}
-
-            //MessageBox.Show(output);
-            //Console.WriteLine(output);
+            MyCanvas.Initialize();
+            AddToolRadioButton.IsChecked = true;
         }
 
         #region Tool Panel Events
@@ -100,10 +77,10 @@ namespace Seven_Bridges
             }
         }
 
-        private void Initialize(object sender, RoutedEventArgs eventArgs)
+
+        private void ShowComponentCount(object sender, RoutedEventArgs e)
         {
-            MyCanvas.Initialize();
-            AddToolRadioButton.IsChecked = true;
+            MessageBox.Show($"Components: {Algorithms.ComponentCount(MyCanvas)}");
         }
     }
 }

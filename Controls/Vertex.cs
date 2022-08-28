@@ -11,6 +11,7 @@ namespace Seven_Bridges.Controls
     public class Vertex : UserControl, INotifyPropertyChanged
     {
         private static int Index = 1;
+        public bool IsVisited = false;
 
         public double Diameter => 40;
         private Point grabPoint;
@@ -49,6 +50,15 @@ namespace Seven_Bridges.Controls
             DataContext = this;
             position = new Point(x - Diameter / 2, y - Diameter / 2);
             Content = Index++;
+        }
+
+        public IEnumerable<Vertex> GetNeighbors()
+        {
+            foreach (Edge edge in Edges)
+            {
+                if (edge.V2 != this) yield return edge.V2;
+                else if (!edge.IsDirected && edge.V1 != this) yield return edge.V1;
+            }
         }
 
         #region Edges

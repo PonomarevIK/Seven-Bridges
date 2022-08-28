@@ -6,7 +6,7 @@
         xmlns:controls="clr-namespace:Seven_Bridges.Controls"
         mc:Ignorable="d"
         Title="Graph App"
-        Loaded="Initialize"
+        Loaded="InitializeWindow"
         Height="600" Width="900">
     <Window.Resources>
 
@@ -60,9 +60,15 @@
 
     <DockPanel Background="LightGray" LastChildFill="True" KeyDown="KeyCommand">
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File"/>
-            <MenuItem Header="New Graph"/>
-            <MenuItem Header="Algorithm"/>
+            <MenuItem Header="File">
+                <MenuItem Header="Nothing here yet"/>
+            </MenuItem>
+            <MenuItem Header="New Graph">
+                <MenuItem Header="Nothing here yet"/>
+            </MenuItem>
+            <MenuItem Header="Algorithm">
+                <MenuItem Header="Number of components" Click="ShowComponentCount"/>
+            </MenuItem>
         </Menu>
 
         <StackPanel DockPanel.Dock="Left" Style="{StaticResource ToolPanel}">
