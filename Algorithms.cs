@@ -11,45 +11,47 @@ namespace Seven_Bridges
 {
     public static class Algorithms
     {
-        private static void BFS(GraphCanvas canvas, Vertex start)
+        private static void BFS(Vertex start, Vertex[] vertices, bool[] isVisited)
         {
-            Queue<Vertex> vertices = new Queue<Vertex>();
-            vertices.Enqueue(start);
-            start.IsVisited = true;
-
-            while(vertices.Count > 0)
+            int IndexOf(Vertex vertex) => Array.IndexOf(vertices, vertex);
+            bool TryVisit(Vertex vertex)
             {
-                foreach(Vertex neighbor in vertices.Dequeue().GetNeighbors())
+                int index = IndexOf(vertex);
+                bool visited = isVisited[index];
+                isVisited[index] = true;
+                return visited;
+            }
+
+            var serarchQueue = new Queue<Vertex>();
+            serarchQueue.Enqueue(start);
+            TryVisit(start);
+
+            while(serarchQueue.Count > 0)
+            {
+                foreach (Vertex neighbor in serarchQueue.Dequeue().GetNeighbors())
                 {
-                    if (neighbor.IsVisited) continue;
-                    vertices.Enqueue(neighbor);
-                    neighbor.IsVisited = true;
+                    if (TryVisit(neighbor)) continue;
+                    serarchQueue.Enqueue(neighbor);
                 }
             }
         }
 
         public static int ComponentCount(GraphCanvas canvas)
         {
-            int count = 0;
+            int componentCount = 0;
+            Vertex[] vertices = canvas.GetArrayOfVertex();
+            bool[] isVisited = new bool[vertices.Length];
 
-            foreach (Vertex vertex in canvas.GetVertices())
+            for (int i = 0; i < vertices.Length; i++)
             {
-                if (!vertex.IsVisited) 
-                { 
-                    count++;
-                    BFS(canvas, vertex);
+                if (!isVisited[i])
+                {
+                    BFS(vertices[i], vertices, isVisited);
+                    componentCount++;
                 }
             }
-            Clear(canvas);
-            return count;
-        }
 
-        private static void Clear(GraphCanvas canvas)
-        {
-            foreach (Vertex vertex in canvas.GetVertices())
-            {
-                vertex.IsVisited = false;
-            }
+            return componentCount;
         }
     }
 }

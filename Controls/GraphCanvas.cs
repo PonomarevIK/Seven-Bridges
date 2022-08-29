@@ -47,14 +47,20 @@ namespace Seven_Bridges.Controls
             scaleTransform.CenterY = Height / 2;
         }
 
-        public IEnumerable<Vertex> GetVertices()
+        public Vertex[] GetArrayOfVertex()
         {
+            int size = VertexCount;
+            var vertices = new Vertex[size];
+            int i = 0;
+
             foreach (UIElement element in Children)
             {
-                if (element is Vertex vertex) yield return vertex;
+                if (element is Vertex vertex) vertices[i++] = vertex;
             }
+
+            return vertices;
         }
-        public int CountVertices
+        public int VertexCount
         {
             get
             {

@@ -11,7 +11,6 @@ namespace Seven_Bridges.Controls
     public class Vertex : UserControl, INotifyPropertyChanged
     {
         private static int Index = 1;
-        public bool IsVisited = false;
 
         public double Diameter => 40;
         private Point grabPoint;
