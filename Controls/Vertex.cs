@@ -50,12 +50,12 @@ namespace Seven_Bridges.Controls
             Content = Index++;
         }
 
-        public IEnumerable<Vertex> GetNeighbors()
+        public IEnumerable<Vertex> GetNeighbors(bool ignoreDirection = false)
         {
             foreach (Edge edge in Edges)
             {
                 if (edge.V2 != this) yield return edge.V2;
-                else if (!edge.IsDirected && edge.V1 != this) yield return edge.V1;
+                else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return edge.V1;
             }
         }
 

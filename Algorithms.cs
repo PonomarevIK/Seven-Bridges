@@ -28,7 +28,7 @@ namespace Seven_Bridges
 
             while(serarchQueue.Count > 0)
             {
-                foreach (Vertex neighbor in serarchQueue.Dequeue().GetNeighbors())
+                foreach (Vertex neighbor in serarchQueue.Dequeue().GetNeighbors(true))
                 {
                     if (TryVisit(neighbor)) continue;
                     serarchQueue.Enqueue(neighbor);
