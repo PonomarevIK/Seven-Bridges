@@ -6,9 +6,7 @@ using System.Linq;
 
 namespace Seven_Bridges.Converters
 {
-    /// <summary>
-    /// Returns an average of all bound values
-    /// </summary>
+    // Returns an average of all bound values
     public class AverageValue : IMultiValueConverter
     {
         private static Func<object, double> propertyConverter = (value) => value == DependencyProperty.UnsetValue ? 0 : System.Convert.ToDouble(value);
@@ -24,9 +22,7 @@ namespace Seven_Bridges.Converters
         }
     }
 
-    /// <summary>
-    /// Shifts a control using margins so that it's top-left corner becomes it's center
-    /// </summary>
+    // Shifts a control using margins so that it's top-left corner becomes it's center
     public class CenteredMargin : IMultiValueConverter
     {
         private static Func<object, bool> isSet = (value) => value != DependencyProperty.UnsetValue;
@@ -48,9 +44,7 @@ namespace Seven_Bridges.Converters
         }
     }
 
-    /// <summary>
-    /// Calculates points for drawing a triangle to make the edge look like an arrow
-    /// </summary>
+    // Calculates points for drawing a triangle to make the edge look like an arrow
     public class DirectedEdgeArrowPosition : IMultiValueConverter
     {
         private static Func<object, bool> isSet = (value) => value != DependencyProperty.UnsetValue;
