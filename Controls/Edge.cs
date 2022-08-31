@@ -3,7 +3,6 @@ using System.Windows;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Data;
 using System.Linq;
 using System.Globalization;
 

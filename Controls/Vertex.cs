@@ -58,6 +58,14 @@ namespace Seven_Bridges.Controls
                 else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return edge.V1;
             }
         }
+        public IEnumerable<(Vertex, double)> GetNeighborsWithWeights(bool ignoreDirection = false)
+        {
+            foreach (Edge edge in Edges)
+            {
+                if (edge.V2 != this) yield return (edge.V2, edge.Weight);
+                else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return (edge.V1, edge.Weight);
+            }
+        }
 
         #region Edges
         public bool IsConnected(Vertex vertex)

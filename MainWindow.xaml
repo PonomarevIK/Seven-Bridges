@@ -68,6 +68,7 @@
             </MenuItem>
             <MenuItem Header="Algorithm">
                 <MenuItem Header="Number of components" Click="ShowComponentCount"/>
+                <MenuItem Header="Shortest path" Click="ShortestPathCalled"/>
                 <MenuItem Header="More to come..."/>
             </MenuItem>
         </Menu>

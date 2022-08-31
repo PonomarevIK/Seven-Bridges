@@ -67,5 +67,11 @@ namespace Seven_Bridges
         {
             MessageBox.Show($"Components: {Algorithms.ComponentCount(MyCanvas)}");
         }
+
+        private void ShortestPathCalled(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("First click on starting vertex, then on destination. To cancel the opertation, click anywhere else.");
+            MyCanvas.ShortestPathSelected();
+        }
     }
 }

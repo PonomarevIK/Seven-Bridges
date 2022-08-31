@@ -3,13 +3,16 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Collections.Generic;
 
 namespace Seven_Bridges.Controls
 {
     public class GraphCanvas : Canvas
     {
         Point prevMousePosition;
-        Edge activeEdge;
+        Edge selectedEdge;
+        Vertex selectedVertex;
+        bool isToolInputBlocked = false;
 
         int zoomScale = 0;
         const double zoomInFactor = 1.2;
@@ -106,8 +109,8 @@ namespace Seven_Bridges.Controls
             MouseLeftButtonDown -= UndirectedEdgeStart;
             MouseMove -= ConnectMove;
             MouseLeftButtonDown -= ConnectEnd;
-            activeEdge?.Delete();
-            activeEdge = null;
+            selectedEdge?.Delete();
+            selectedEdge = null;
         }
         public void DirectedEdgeToolSelected()
         {
@@ -118,8 +121,13 @@ namespace Seven_Bridges.Controls
             MouseLeftButtonDown -= DirectedEdgeStart;
             MouseMove -= ConnectMove;
             MouseLeftButtonDown -= ConnectEnd;
-            activeEdge?.Delete();
-            activeEdge = null;
+            selectedEdge?.Delete();
+            selectedEdge = null;
+        }
+        public void ShortestPathSelected()
+        {
+            isToolInputBlocked = true;
+            MouseLeftButtonDown += ShortestPathPointSelector;
         }
         #endregion
 
@@ -142,9 +150,13 @@ namespace Seven_Bridges.Controls
             }
         }
 
+        public void BlockToolInput() => isToolInputBlocked = true;
+        public void UnblockToolInput() => isToolInputBlocked = false;
+
         #region Drag
         private void CanvasGrab(object sender, MouseButtonEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             if (eventArgs.Source == this || eventArgs.OriginalSource is Line)
             {
                 CaptureMouse();
@@ -159,6 +171,7 @@ namespace Seven_Bridges.Controls
         }
         private void DragMouseMove(object sender, MouseEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             var mousePosition = eventArgs.GetPosition(Parent as IInputElement);
             translateTransform.X += mousePosition.X - prevMousePosition.X;
             translateTransform.Y += mousePosition.Y - prevMousePosition.Y;
@@ -180,11 +193,13 @@ namespace Seven_Bridges.Controls
         #region Add & Delete
         private void AddVertex(object sender, MouseButtonEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             var clickPosition = eventArgs.GetPosition(this);
             Children.Add(new Vertex(clickPosition.X, clickPosition.Y));
         }
         private void DeleteItem(object sender, MouseButtonEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             if (eventArgs.Source is Vertex vertex)
             {
                 vertex.Delete();
@@ -199,21 +214,23 @@ namespace Seven_Bridges.Controls
         #region Connect
         private void DirectedEdgeStart(object sender, MouseButtonEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             if (eventArgs.Source is Vertex v1)
             {
                 MouseLeftButtonDown -= DirectedEdgeStart;
-                activeEdge = new Edge();
-                activeEdge.IsDirected = true;
+                selectedEdge = new Edge();
+                selectedEdge.IsDirected = true;
                 ConnectStart(v1);
             }
         }
         private void UndirectedEdgeStart(object sender, MouseButtonEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             if (eventArgs.Source is Vertex v1)
             {
                 MouseLeftButtonDown -= UndirectedEdgeStart;
-                activeEdge = new Edge();
-                activeEdge.IsDirected = false;
+                selectedEdge = new Edge();
+                selectedEdge.IsDirected = false;
                 ConnectStart(v1);
             }
         }
@@ -222,18 +239,19 @@ namespace Seven_Bridges.Controls
             MouseLeftButtonDown += ConnectEnd;
             MouseMove += ConnectMove;
 
-            Children.Add(activeEdge);
-            v1.TryAddEdgeFrom(activeEdge);
+            Children.Add(selectedEdge);
+            v1.TryAddEdgeFrom(selectedEdge);
         }
         private void ConnectMove(object sender, MouseEventArgs eventArgs)
         {
+            if (isToolInputBlocked) return;
             var mousePosition = eventArgs.GetPosition(this);
-            activeEdge.FollowMouseX = mousePosition.X;
-            activeEdge.FollowMouseY = mousePosition.Y;
+            selectedEdge.FollowMouseX = mousePosition.X;
+            selectedEdge.FollowMouseY = mousePosition.Y;
         }
         private void ConnectEnd(object sender, MouseButtonEventArgs eventArgs)
         {
-            if (activeEdge.IsDirected)
+            if (selectedEdge.IsDirected)
             {
                 MouseLeftButtonDown += DirectedEdgeStart;
             }
@@ -244,11 +262,11 @@ namespace Seven_Bridges.Controls
             MouseMove -= ConnectMove;
             MouseLeftButtonDown -= ConnectEnd;
 
-            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeTo(activeEdge)))
+            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeTo(selectedEdge)) || isToolInputBlocked)
             {
-                activeEdge.Delete();
+                selectedEdge.Delete();
             }
-            activeEdge = null;
+            selectedEdge = null;
         }
         #endregion
 
@@ -288,5 +306,34 @@ namespace Seven_Bridges.Controls
             scaleTransform.ScaleY = 1;
         }
         #endregion
+
+        public void ShortestPathPointSelector(object sender, MouseButtonEventArgs eventArgs)
+        {
+            void Cancel()
+            {
+                isToolInputBlocked = false;
+                selectedVertex = null;
+                MouseLeftButtonDown -= ShortestPathPointSelector;
+            }
+
+            if (eventArgs.Source is Vertex vertex)
+            {
+                if (selectedVertex == null)
+                {
+                    selectedVertex = vertex;
+                } 
+                else if (selectedVertex != vertex)
+                {
+                    double result = Algorithms.Dijkstra(selectedVertex, vertex, this);
+                    if (result == -1) MessageBox.Show("No path");
+                    else MessageBox.Show($"Shortest path is {result} units long");
+                    Cancel();
+                }
+            }
+            else
+            {
+                Cancel();
+            }
+        }
     }
 }
