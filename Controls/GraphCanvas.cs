@@ -309,12 +309,23 @@ namespace Seven_Bridges.Controls
 
         public void ShortestPathPointSelector(object sender, MouseButtonEventArgs eventArgs)
         {
+            LinkedList<Edge> result = new LinkedList<Edge>();
+
             void Cancel()
             {
                 isToolInputBlocked = false;
                 selectedVertex = null;
                 MouseLeftButtonDown -= ShortestPathPointSelector;
             }
+            void ResetColors(object s, MouseButtonEventArgs e)
+            {
+                foreach (Edge edge in result)
+                {
+                    edge.SetColor(Edge.Colors.Default);
+                }
+                MouseLeftButtonDown -= ResetColors;
+            }
+
 
             if (eventArgs.Source is Vertex vertex)
             {
@@ -324,9 +335,17 @@ namespace Seven_Bridges.Controls
                 } 
                 else if (selectedVertex != vertex)
                 {
-                    double result = Algorithms.Dijkstra(selectedVertex, vertex, this);
-                    if (result == -1) MessageBox.Show("No path");
-                    else MessageBox.Show($"Shortest path is {result} units long");
+                    result = Algorithms.Dijkstra(selectedVertex, vertex, this);
+                    if (result == null) MessageBox.Show("No path");
+                    else
+                    {
+                        MessageBox.Show($"Shortest path is {Algorithms.TotalDistance(result)} units long");
+                        foreach (Edge edge in result)
+                        {
+                            edge.SetColor(Edge.Colors.Highlighted);
+                        }
+                        MouseLeftButtonDown += ResetColors;
+                    } 
                     Cancel();
                 }
             }
@@ -335,5 +354,6 @@ namespace Seven_Bridges.Controls
                 Cancel();
             }
         }
+        
     }
 }

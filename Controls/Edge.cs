@@ -5,11 +5,18 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Linq;
 using System.Globalization;
+using System.Windows.Media;
 
 namespace Seven_Bridges.Controls
 {
     public class Edge : UserControl, INotifyPropertyChanged
     {
+        public enum Colors
+        {
+            Default, 
+            Highlighted,
+        }
+
         private Vertex v1;
         public Vertex V1
         {
@@ -84,6 +91,31 @@ namespace Seven_Bridges.Controls
         public Visibility WeightVisibility
         {
             get => (v1 != null && v2 != null && (Weight != 1 || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private Brush color;
+        public Brush Color
+        {
+            get => color ?? Brushes.Black;
+            set
+            {
+                color = value;
+                OnPropertyChanged("Color");
+            }
+        }
+        public void SetColor(Colors color)
+        {
+            switch (color)
+            {
+                case Colors.Highlighted:
+                    Color = Brushes.Red;
+                    break;
+                case Colors.Default:
+                default:
+                    Color = Brushes.Black;
+                    break;
+            }
+
         }
 
         private bool isDirected;

@@ -11,7 +11,6 @@
     <SolidColorBrush x:Key="VertexDefaultBrush" Color="PaleTurquoise"/>
     <SolidColorBrush x:Key="VertexHoverBrush" Color="Turquoise"/>
     <SolidColorBrush x:Key="VertexBorderBrush" Color="Black"/>
-    <SolidColorBrush x:Key="EdgeBrush" Color="Black"/>
     <SolidColorBrush x:Key="EdgeWeightBrush" Color="PaleTurquoise"/>
 
 
@@ -50,7 +49,7 @@
                     <Canvas>
                         
                         <!--Edge line-->
-                        <Line StrokeThickness="5" Stroke="{StaticResource EdgeBrush}">
+                        <Line StrokeThickness="5" Stroke="{Binding Color}">
                             <Line.X1>
                                 <Binding Path="V1.CenterX"/>
                             </Line.X1>
@@ -72,8 +71,8 @@
                         </Line>
                         
                         <!--Arrow triangle-->
-                        <Polygon Fill="{StaticResource EdgeBrush}" 
-                                 Stroke="{StaticResource EdgeBrush}" 
+                        <Polygon Fill="{Binding Color}" 
+                                 Stroke="{Binding Color}" 
                                  StrokeThickness="5">
                             <Polygon.Points>
                                 <MultiBinding Converter="{StaticResource ArrowPosition}">

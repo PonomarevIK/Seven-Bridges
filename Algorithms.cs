@@ -1,8 +1,10 @@
 ﻿using Seven_Bridges.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace Seven_Bridges
 {
@@ -10,6 +12,7 @@ namespace Seven_Bridges
     {
         // Slightly shorter version of Array.IndexOf()
         private static int IndexOf(Vertex vertex, Vertex[] vertices) => Array.IndexOf(vertices, vertex);
+        public static double TotalDistance(LinkedList<Edge> path) => path.Sum((Edge e) => e.Weight);
 
         /// <summary>
         /// Breadth Fist Search algorithm
@@ -65,32 +68,33 @@ namespace Seven_Bridges
         }
 
         // Returns the shortest path between two vertices using Dijkstra's algorithm.
-        // If there is no path from 'start' to 'end' returns -1
-        public static double Dijkstra(Vertex start, Vertex end, GraphCanvas canvas)
+        // If there is no path from 'start' to 'end' returns null
+        public static LinkedList<Edge> Dijkstra(Vertex start, Vertex end, GraphCanvas canvas)
         {
             var vertices = canvas.GetArrayOfVertex();
             var traversalQueue = new Queue<Vertex>();
-            double[] distances = new double[vertices.Length];
-            for (int i = 0; i < distances.Length; i++) distances[i] = -1;
+            LinkedList<Edge>[] paths = new LinkedList<Edge>[vertices.Length];
 
+            paths[IndexOf(start, vertices)] = new LinkedList<Edge>();
             traversalQueue.Enqueue(start);
-            distances[IndexOf(start, vertices)] = 0;
             while (traversalQueue.Count > 0)
             {
                 var currentVertex = traversalQueue.Dequeue();
                 int currentVertexIndex = IndexOf(currentVertex, vertices);
-                foreach ((Vertex neighbor, double weight) in currentVertex.GetNeighborsWithWeights(false))
+                foreach ((Vertex neighbor, Edge edge) in currentVertex.GetNeighborsWithEdges(false))
                 {
                     int neighborIndex = IndexOf(neighbor, vertices);
-                    if (distances[neighborIndex] != -1 && distances[neighborIndex] <= distances[currentVertexIndex] + weight) continue;
-                    if (distances[neighborIndex] == -1 || distances[neighborIndex] > distances[currentVertexIndex] + weight)
+                    if (paths[neighborIndex] != null && TotalDistance(paths[neighborIndex]) <= TotalDistance(paths[currentVertexIndex]) + edge.Weight) continue;
+                    if (paths[neighborIndex] == null || TotalDistance(paths[neighborIndex]) > TotalDistance(paths[currentVertexIndex]) + edge.Weight)
                     {
-                        distances[neighborIndex] = distances[currentVertexIndex] + weight;
+                        paths[neighborIndex] = new LinkedList<Edge>(paths[currentVertexIndex]);
+                        paths[neighborIndex].AddLast(edge);
                     }
                     traversalQueue.Enqueue(neighbor);
                 }
             }
-            return distances[IndexOf(end, vertices)];
+
+            return paths[IndexOf(end, vertices)];
         }
     }
 }

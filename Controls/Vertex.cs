@@ -50,6 +50,7 @@ namespace Seven_Bridges.Controls
             Content = Index++;
         }
 
+        // Iterates through every vertex connected to this one 
         public IEnumerable<Vertex> GetNeighbors(bool ignoreDirection = false)
         {
             foreach (Edge edge in Edges)
@@ -58,12 +59,22 @@ namespace Seven_Bridges.Controls
                 else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return edge.V1;
             }
         }
+        // Iterates through every vertex connected to this one and returns (neighborVertex, distance) tuples
         public IEnumerable<(Vertex, double)> GetNeighborsWithWeights(bool ignoreDirection = false)
         {
             foreach (Edge edge in Edges)
             {
                 if (edge.V2 != this) yield return (edge.V2, edge.Weight);
                 else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return (edge.V1, edge.Weight);
+            }
+        }
+        // Iterates through every vertex connected to this one and returns (neighborVertex, connectingEdge) tuples
+        public IEnumerable<(Vertex, Edge)> GetNeighborsWithEdges(bool ignoreDirection = false)
+        {
+            foreach (Edge edge in Edges)
+            {
+                if (edge.V2 != this) yield return (edge.V2, edge);
+                else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return (edge.V1, edge);
             }
         }
 
