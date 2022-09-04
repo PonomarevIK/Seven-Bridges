@@ -90,7 +90,7 @@
                         <!--Weight textbox-->
                         <Border Background="{StaticResource EdgeWeightBrush}" 
                                 Visibility="{Binding WeightVisibility}" 
-                                BorderBrush="{StaticResource EdgeBrush}" 
+                                BorderBrush="{Binding Color}" 
                                 BorderThickness="1">
                             <Border.Margin>
                                 <MultiBinding Converter="{StaticResource CenteredMarginConverter}">
