@@ -171,6 +171,7 @@ namespace Seven_Bridges.Controls
             var parent = Parent as GraphCanvas;
             var mousePosition = eventArgs.GetPosition(parent);
 
+            // Dont allow the control to be dragged out of bounds
             if (mousePosition.X - grabPoint.X < 0)
                 X = 0;
             else if (mousePosition.X + Diameter - grabPoint.X > parent.Width)
@@ -194,6 +195,9 @@ namespace Seven_Bridges.Controls
         }
         #endregion
 
+        /// <summary>
+        /// Remove self from canvas and delete every refrence to self
+        /// </summary>
         public void Delete()
         {
             foreach (Edge edge in Edges)

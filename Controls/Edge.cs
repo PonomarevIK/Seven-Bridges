@@ -17,6 +17,7 @@ namespace Seven_Bridges.Controls
             Highlighted,
         }
 
+        // Tail vertex
         private Vertex v1;
         public Vertex V1
         {
@@ -28,6 +29,7 @@ namespace Seven_Bridges.Controls
                 OnPropertyChanged("WeightVisibility");
             }
         }
+        // Head vertex
         private Vertex v2;
         public Vertex V2
         {
@@ -40,6 +42,7 @@ namespace Seven_Bridges.Controls
             }
         }
 
+        // Edge endpoint follows the mouse cursor until it is connected to a vertex
         private double? followMouseX;
         public double FollowMouseX
         {
@@ -88,6 +91,7 @@ namespace Seven_Bridges.Controls
                 }
             }
         }
+        // Weight should be displayed only if it's not at default value (1) or if there is a mouse cursor hovering over it
         public Visibility WeightVisibility
         {
             get => (v1 != null && v2 != null && (Weight != 1 || IsMouseOver)) ? Visibility.Visible : Visibility.Hidden;
@@ -161,6 +165,9 @@ namespace Seven_Bridges.Controls
             }
         }
 
+        /// <summary>
+        /// Remove self from canvas and delete every refrence to self
+        /// </summary>
         public void Delete(Vertex sourceVertex = null)
         {
             if (v1 != null && v1 != sourceVertex)
