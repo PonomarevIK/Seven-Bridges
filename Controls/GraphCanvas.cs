@@ -240,7 +240,7 @@ namespace Seven_Bridges.Controls
             MouseMove += ConnectMove;
 
             Children.Add(selectedEdge);
-            v1.TryAddEdgeFrom(selectedEdge);
+            v1.TryAddEdgeTail(selectedEdge);
         }
         private void ConnectMove(object sender, MouseEventArgs eventArgs)
         {
@@ -262,7 +262,7 @@ namespace Seven_Bridges.Controls
             MouseMove -= ConnectMove;
             MouseLeftButtonDown -= ConnectEnd;
 
-            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeTo(selectedEdge)) || isToolInputBlocked)
+            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeHead(selectedEdge)) || isToolInputBlocked)
             {
                 selectedEdge.Delete();
             }
