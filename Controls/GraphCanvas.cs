@@ -48,6 +48,9 @@ namespace Seven_Bridges.Controls
             scaleTransform.CenterY = Height / 2;
         }
 
+        /// <summary>
+        /// Get an array of every vertex currently on canvas.
+        /// </summary>
         public Vertex[] GetArrayOfVertex()
         {
             int size = VertexCount;
@@ -61,6 +64,9 @@ namespace Seven_Bridges.Controls
 
             return vertices;
         }
+        /// <summary>
+        /// Number of vertices on canvas.
+        /// </summary>
         public int VertexCount
         {
             get
@@ -107,7 +113,7 @@ namespace Seven_Bridges.Controls
         public void UndirectedEdgeToolUnselected()
         {
             MouseLeftButtonDown -= UndirectedEdgeStart;
-            MouseMove -= ConnectMove;
+            MouseMove -= ConnectOnMouseMove;
             MouseLeftButtonDown -= ConnectEnd;
             selectedEdge?.Delete();
             selectedEdge = null;
@@ -119,7 +125,7 @@ namespace Seven_Bridges.Controls
         public void DirectedEdgeToolUnselected()
         {
             MouseLeftButtonDown -= DirectedEdgeStart;
-            MouseMove -= ConnectMove;
+            MouseMove -= ConnectOnMouseMove;
             MouseLeftButtonDown -= ConnectEnd;
             selectedEdge?.Delete();
             selectedEdge = null;
@@ -135,14 +141,17 @@ namespace Seven_Bridges.Controls
         {
             switch (e.Key)
             {
+                // + to zoom in
                 case Key.Add:
                 case Key.OemPlus:
                     Scale(zoomInFactor);
                     break;
+                // - to zoom out
                 case Key.Subtract:
                 case Key.OemMinus:
                     Scale(zoomOutFactor);
                     break;
+                // Enter to reset zoom scale and canvas position 
                 case Key.Enter:
                     ResetPosition();
                     ResetScale();
@@ -161,7 +170,7 @@ namespace Seven_Bridges.Controls
             {
                 CaptureMouse();
                 prevMousePosition = eventArgs.GetPosition(Parent as IInputElement);
-                MouseMove += DragMouseMove;
+                MouseMove += DragOnMouseMove;
                 MouseLeftButtonUp += DragStop;
             }
             else if (eventArgs.Source is Vertex vertex)
@@ -169,7 +178,7 @@ namespace Seven_Bridges.Controls
                 vertex.DragStart(eventArgs.GetPosition(vertex));
             }
         }
-        private void DragMouseMove(object sender, MouseEventArgs eventArgs)
+        private void DragOnMouseMove(object sender, MouseEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
             var mousePosition = eventArgs.GetPosition(Parent as IInputElement);
@@ -180,7 +189,7 @@ namespace Seven_Bridges.Controls
         private void DragStop(object sender, MouseEventArgs eventArgs)
         {
             ReleaseMouseCapture();
-            MouseMove -= DragMouseMove;
+            MouseMove -= DragOnMouseMove;
             MouseLeftButtonUp -= DragStop;
         }
         public void ResetPosition()
@@ -237,12 +246,12 @@ namespace Seven_Bridges.Controls
         private void ConnectStart(Vertex v1)
         {
             MouseLeftButtonDown += ConnectEnd;
-            MouseMove += ConnectMove;
+            MouseMove += ConnectOnMouseMove;
 
             Children.Add(selectedEdge);
             v1.TryAddEdgeTail(selectedEdge);
         }
-        private void ConnectMove(object sender, MouseEventArgs eventArgs)
+        private void ConnectOnMouseMove(object sender, MouseEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
             var mousePosition = eventArgs.GetPosition(this);
@@ -259,7 +268,7 @@ namespace Seven_Bridges.Controls
             {
                 MouseLeftButtonDown += UndirectedEdgeStart;
             }
-            MouseMove -= ConnectMove;
+            MouseMove -= ConnectOnMouseMove;
             MouseLeftButtonDown -= ConnectEnd;
 
             if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeHead(selectedEdge)) || isToolInputBlocked)
@@ -307,6 +316,9 @@ namespace Seven_Bridges.Controls
         }
         #endregion
 
+        /// <summary>
+        /// To find the shortest path between two vertices, first click on start point, then on end point. Or anywhere else to cancel.
+        /// </summary>
         public void ShortestPathPointSelector(object sender, MouseButtonEventArgs eventArgs)
         {
             LinkedList<Edge> result = new LinkedList<Edge>();
