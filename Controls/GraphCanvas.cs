@@ -48,9 +48,7 @@ namespace Seven_Bridges.Controls
             scaleTransform.CenterY = Height / 2;
         }
 
-        /// <summary>
-        /// Get an array of every vertex currently on canvas.
-        /// </summary>
+        /// <summary>Get an array of every vertex currently on canvas.</summary>
         public Vertex[] GetArrayOfVertex()
         {
             int size = VertexCount;
@@ -64,9 +62,7 @@ namespace Seven_Bridges.Controls
 
             return vertices;
         }
-        /// <summary>
-        /// Number of vertices on canvas.
-        /// </summary>
+        /// <summary>Number of vertices on canvas.</summary>
         public int VertexCount
         {
             get
@@ -316,9 +312,7 @@ namespace Seven_Bridges.Controls
         }
         #endregion
 
-        /// <summary>
-        /// To find the shortest path between two vertices, first click on start point, then on end point. Or anywhere else to cancel.
-        /// </summary>
+        /// <summary>To find the shortest path between two vertices, first click on start point, then on end point. Or anywhere else to cancel.</summary>
         public void ShortestPathPointSelector(object sender, MouseButtonEventArgs eventArgs)
         {
             LinkedList<Edge> result = new LinkedList<Edge>();

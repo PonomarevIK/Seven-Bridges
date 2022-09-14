@@ -11,9 +11,7 @@ namespace Seven_Bridges
         private static int IndexOf(Vertex vertex, Vertex[] vertices) => Array.IndexOf(vertices, vertex);
         public static double TotalDistance(LinkedList<Edge> path) => path.Sum((Edge e) => e.Weight);
 
-        /// <summary>
-        /// Breadth Fist Search algorithm
-        /// </summary>
+        /// <summary> Breadth Fist Search algorithm </summary>
         /// <param name="start">Vertex from which search starts</param>
         /// <param name="vertices">Array of all vertices on a graph</param>
         /// <param name="isVisited">Boolean Array where isVisited[i] = true if vertices[i] has been encountered during search</param>
@@ -45,7 +43,7 @@ namespace Seven_Bridges
             return end == null ? false : isVisited[IndexOf(end, vertices)];
         }
 
-        // Returns a number of connected components in a graph
+        /// <returns>A number of connected components in a graph</returns>
         public static int ComponentCount(GraphCanvas canvas)
         {
             int componentCount = 0;
@@ -64,8 +62,7 @@ namespace Seven_Bridges
             return componentCount;
         }
 
-        // Returns the shortest path between two vertices using Dijkstra's algorithm.
-        // If there is no path from 'start' to 'end' returns null
+        /// <returns>If a path exists from 'start' to 'end' returns the shortest one as a linked list of edges. Otherwise returns null.</returns>
         public static LinkedList<Edge> Dijkstra(Vertex start, Vertex end, GraphCanvas canvas)
         {
             var vertices = canvas.GetArrayOfVertex();

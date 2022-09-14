@@ -165,9 +165,7 @@ namespace Seven_Bridges.Controls
             }
         }
 
-        /// <summary>
-        /// Remove self from canvas and delete every refrence to self
-        /// </summary>
+        /// <summary>Remove self from canvas and delete every refrence to self.</summary>
         public void Delete(Vertex sourceVertex = null)
         {
             if (v1 != null && v1 != sourceVertex)

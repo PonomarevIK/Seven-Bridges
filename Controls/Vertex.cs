@@ -9,24 +9,16 @@ namespace Seven_Bridges.Controls
 {
     public class Vertex : UserControl, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Keeps track of how many vertices were created, and gives each new one a unique index.
-        /// </summary>
+        /// <summary>Keeps track of how many vertices were created, and gives each new one a unique index.</summary>
         private static int Index = 1;
 
-        /// <summary>
-        /// Diameter of an ellipse representing this vertex on canvas.
-        /// </summary>
+        /// <summary>Diameter of an ellipse representing this vertex on canvas.</summary>
         public double Diameter => 40;
         
-        /// <summary>
-        /// Relative position of where control has been grabbed before being dragged.
-        /// </summary>
+        /// <summary>Relative position of where control has been grabbed before being dragged.</summary>
         private Point grabPoint;
 
-        /// <summary>
-        /// List of all edges to and from this vertex.
-        /// </summary>
+        /// <summary>List of all edges to and from this vertex.</summary>
         public List<Edge> Edges = new List<Edge>();
 
         // Control position on canvas
@@ -58,9 +50,7 @@ namespace Seven_Bridges.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Vertex), new FrameworkPropertyMetadata(typeof(Vertex)));
         }
-        /// <summary>
-        /// Create a new vertex with specified position (x, y).
-        /// </summary>
+        /// <summary>Create a new vertex with specified position (x, y).</summary>
         public Vertex(double x, double y)
         {
             DataContext = this;
@@ -68,9 +58,7 @@ namespace Seven_Bridges.Controls
             Content = Index++;
         }
 
-        /// <summary>
-        /// Iterates through every vertex connected to this one.
-        /// </summary>
+        /// <summary>Iterates through every vertex connected to this one.</summary>
         /// <param name="ignoreDirection">If true, inward connections will be considered neighbors as well.</param>
         /// <returns></returns>
         public IEnumerable<Vertex> GetNeighbors(bool ignoreDirection = false)
@@ -81,9 +69,7 @@ namespace Seven_Bridges.Controls
                 else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return edge.V1;
             }
         }
-        /// <summary>
-        /// Iterates through every vertex connected to this one and yields (neighborVertex, distance) tuples.
-        /// </summary>
+        /// <summary>Iterates through every vertex connected to this one and yields (neighborVertex, distance) tuples.</summary>
         /// <param name="ignoreDirection">If true, inward connections will be considered neighbors as well.</param>
         /// <returns></returns>
         public IEnumerable<(Vertex, double)> GetNeighborsWithWeights(bool ignoreDirection = false)
@@ -94,9 +80,7 @@ namespace Seven_Bridges.Controls
                 else if ((!edge.IsDirected || ignoreDirection) && edge.V1 != this) yield return (edge.V1, edge.Weight);
             }
         }
-        /// <summary>
-        /// Iterates through every vertex connected to this one and yields (neighborVertex, connectingEdge) tuples.
-        /// </summary>
+        /// <summary>Iterates through every vertex connected to this one and yields (neighborVertex, connectingEdge) tuples.</summary>
         /// <param name="ignoreDirection">If true, inward connections will be considered neighbors as well.</param>
         /// <returns></returns>
         public IEnumerable<(Vertex, Edge)> GetNeighborsWithEdges(bool ignoreDirection = false)
@@ -129,9 +113,7 @@ namespace Seven_Bridges.Controls
             return false;
         }
 
-        /// <summary>
-        /// Tries to connect an edge TO this vertex. Retirns true on success.
-        /// </summary>
+        /// <summary>Tries to connect an edge TO this vertex. Retirns true on success.</summary>
         public bool TryAddEdgeHead(Edge edge)
         {
             if (edge.V1.IsConnectedTo(this)) return false;
@@ -145,9 +127,7 @@ namespace Seven_Bridges.Controls
 
             return true;
         }
-        /// <summary>
-        /// Tries to connect an edge FROM this vertex. Retirns true on success.
-        /// </summary>
+        /// <summary>Tries to connect an edge FROM this vertex. Retirns true on success.</summary>
         public bool TryAddEdgeTail(Edge edge)
         {
             Edges.Add(edge);
@@ -195,9 +175,7 @@ namespace Seven_Bridges.Controls
         }
         #endregion
 
-        /// <summary>
-        /// Remove self from canvas and delete every refrence to self
-        /// </summary>
+        /// <summary>Remove self from canvas and delete every refrence to self.</summary>
         public void Delete()
         {
             foreach (Edge edge in Edges)
