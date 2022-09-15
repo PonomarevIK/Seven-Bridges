@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 
 namespace Seven_Bridges.Controls
 {
@@ -56,6 +58,15 @@ namespace Seven_Bridges.Controls
             DataContext = this;
             position = new Point(x - Diameter / 2, y - Diameter / 2);
             Content = Index++;
+            MouseRightButtonDown += ShowRenameDialogBox;
+        }
+        public void ShowRenameDialogBox(object sender, MouseButtonEventArgs eventArgs)
+        {
+            var renamePrompt = new TextPrompt("Rename vertex to:");
+            if (renamePrompt.ShowDialog() == true)
+            {
+                Content = renamePrompt.ResponseText;
+            }
         }
 
         /// <summary>Iterates through every vertex connected to this one.</summary>
