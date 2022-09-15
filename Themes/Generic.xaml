@@ -116,7 +116,7 @@
                                      MinWidth="16" 
                                      TextAlignment="Center" 
                                      BorderThickness="0" 
-                                     MaxLength="9"/>
+                                     MaxLength="7"/>
                         </Border>
                         
                     </Canvas>

@@ -146,6 +146,12 @@ namespace Seven_Bridges.Controls
             MouseLeave += Unfocus;
             PreviewTextInput += ValidateWeightInput;
         }
+        public Edge(Vertex tail, Vertex head, GraphCanvas parent) : this()
+        {
+            V1 = tail;
+            V2 = head;
+            parent.AddChild(this);
+        }
 
         private void OnHover(object sender, MouseEventArgs eventArgs)
         {

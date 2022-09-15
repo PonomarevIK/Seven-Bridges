@@ -12,6 +12,7 @@ namespace Seven_Bridges.Controls
         Point prevMousePosition;
         Edge selectedEdge;
         Vertex selectedVertex;
+        UndoStack undoStack = new UndoStack();
         bool isToolInputBlocked = false;
 
         int zoomScale = 0;
@@ -48,6 +49,20 @@ namespace Seven_Bridges.Controls
             scaleTransform.CenterY = Height / 2;
         }
 
+        /// <summary>Number of vertices on canvas.</summary>
+        public int VertexCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (UIElement element in Children)
+                {
+                    if (element is Vertex) count++;
+                }
+                return count;
+            }
+        }
+
         /// <summary>Get an array of every vertex currently on canvas.</summary>
         public Vertex[] GetArrayOfVertex()
         {
@@ -62,19 +77,7 @@ namespace Seven_Bridges.Controls
 
             return vertices;
         }
-        /// <summary>Number of vertices on canvas.</summary>
-        public int VertexCount
-        {
-            get
-            {
-                int count = 0;
-                foreach (UIElement element in Children)
-                {
-                    if (element is Vertex) count++;
-                }
-                return count;
-            }
-        }
+
 
         #region Tool Selection Events
         public void DragToolSelected()
@@ -152,6 +155,10 @@ namespace Seven_Bridges.Controls
                     ResetPosition();
                     ResetScale();
                     break;
+                // Undo
+                case Key.Z:
+                    undoStack.Pop();
+                    break;
             }
         }
 
@@ -174,6 +181,7 @@ namespace Seven_Bridges.Controls
                 vertex.DragStart(eventArgs.GetPosition(vertex));
             }
         }
+
         private void DragOnMouseMove(object sender, MouseEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
@@ -182,12 +190,14 @@ namespace Seven_Bridges.Controls
             translateTransform.Y += mousePosition.Y - prevMousePosition.Y;
             prevMousePosition = mousePosition;
         }
+
         private void DragStop(object sender, MouseEventArgs eventArgs)
         {
             ReleaseMouseCapture();
             MouseMove -= DragOnMouseMove;
             MouseLeftButtonUp -= DragStop;
         }
+
         public void ResetPosition()
         {
             translateTransform.X = 0;
@@ -196,12 +206,27 @@ namespace Seven_Bridges.Controls
         #endregion
 
         #region Add & Delete
+        public void AddChild(UIElement element)
+        {
+            if (element is Vertex vertex)
+            {
+                undoStack.Push(new AddVertex_Action(vertex));
+            }
+            else if (element is Edge edge)
+            {
+                undoStack.Push(new AddEdge_Action(edge));
+            }
+
+            Children.Add(element);
+        }
+
         private void AddVertex(object sender, MouseButtonEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
             var clickPosition = eventArgs.GetPosition(this);
-            Children.Add(new Vertex(clickPosition.X, clickPosition.Y));
+            AddChild(new Vertex(clickPosition.X, clickPosition.Y));
         }
+
         private void DeleteItem(object sender, MouseButtonEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
@@ -228,6 +253,7 @@ namespace Seven_Bridges.Controls
                 ConnectStart(v1);
             }
         }
+
         private void UndirectedEdgeStart(object sender, MouseButtonEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
@@ -239,14 +265,16 @@ namespace Seven_Bridges.Controls
                 ConnectStart(v1);
             }
         }
+
         private void ConnectStart(Vertex v1)
         {
             MouseLeftButtonDown += ConnectEnd;
             MouseMove += ConnectOnMouseMove;
 
-            Children.Add(selectedEdge);
+            AddChild(selectedEdge);
             v1.TryAddEdgeTail(selectedEdge);
         }
+
         private void ConnectOnMouseMove(object sender, MouseEventArgs eventArgs)
         {
             if (isToolInputBlocked) return;
@@ -254,6 +282,7 @@ namespace Seven_Bridges.Controls
             selectedEdge.FollowMouseX = mousePosition.X;
             selectedEdge.FollowMouseY = mousePosition.Y;
         }
+
         private void ConnectEnd(object sender, MouseButtonEventArgs eventArgs)
         {
             if (selectedEdge.IsDirected)
@@ -293,6 +322,7 @@ namespace Seven_Bridges.Controls
                 Scale(zoomOutFactor, mousePosition);
             }
         }
+
         private void Scale(double factor, Point? target = null)
         {
             scaleTransform.ScaleX *= factor;
@@ -304,6 +334,7 @@ namespace Seven_Bridges.Controls
                 translateTransform.Y += (((target.Value.Y - Height / 2) / factor) + Height / 2 - target.Value.Y) * scaleTransform.ScaleY;
             }
         }
+
         public void ResetScale()
         {
             zoomScale = 0;

@@ -58,6 +58,7 @@
     <Compile Include="TextPrompt.xaml.cs">
       <DependentUpon>TextPrompt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UndoStack.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
