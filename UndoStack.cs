@@ -1,13 +1,16 @@
-﻿using Seven_Bridges.Controls;
-using System;
+﻿using System;
+using Seven_Bridges.Controls;
 using System.Collections.Generic;
 
 namespace Seven_Bridges
 {
+    /// <summary>Linked list of limited length that behaves like a stack. Keeps last 'maxHistoryLength' actions performed on a canvas.</summary>
     class UndoStack
     {
         private int maxHistoryLength;
         private LinkedList<Action> ActionHistory;
+
+        public int Count => ActionHistory.Count;
 
         public UndoStack(int maxHistoryLength = 20)
         {
@@ -15,6 +18,7 @@ namespace Seven_Bridges
             ActionHistory = new LinkedList<Action>();
         }
 
+        /// <summary>Push new action on top of the stack</summary>
         public void Push(Action action)
         {
             ActionHistory.AddLast(action);
@@ -24,13 +28,23 @@ namespace Seven_Bridges
             }
         }
 
-        public void Pop()
+        /// <summary>Remove and return the last action from the stack</summary>
+        public Action Pop()
         {
             if (ActionHistory.Count > 0)
             {
-                ActionHistory.Last.Value.Undo();
+                //ActionHistory.Last.Value.Undo();
+                Action lastAction = ActionHistory.Last.Value;
                 ActionHistory.RemoveLast();
+                return lastAction;
             }
+            return null;
+        }
+
+        /// <summary>Return the last action without removing it</summary>
+        public Action Peek()
+        {
+            return ActionHistory.Last?.Value;
         }
     }
 
@@ -44,7 +58,7 @@ namespace Seven_Bridges
 
     class AddVertex_Action : Action
     {
-        Vertex addedVertex;
+        public readonly Vertex addedVertex;
         public AddVertex_Action(Vertex vertex)
         {
             addedVertex = vertex;
@@ -52,13 +66,13 @@ namespace Seven_Bridges
 
         public override void Undo()
         {
-            addedVertex.Delete();
+            //addedVertex.Delete();
         }
     }
 
     class AddEdge_Action : Action
     {
-        Edge addedEdge;
+        public readonly Edge addedEdge;
         public AddEdge_Action(Edge edge)
         {
             addedEdge = edge;
@@ -66,7 +80,8 @@ namespace Seven_Bridges
 
         public override void Undo()
         {
-            addedEdge.Delete();
+            //addedEdge.Delete();
+            var ss = new Stack<int>();
         }
     }
 }

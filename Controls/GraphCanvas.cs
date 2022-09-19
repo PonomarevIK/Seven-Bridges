@@ -114,7 +114,7 @@ namespace Seven_Bridges.Controls
             MouseLeftButtonDown -= UndirectedEdgeStart;
             MouseMove -= ConnectOnMouseMove;
             MouseLeftButtonDown -= ConnectEnd;
-            selectedEdge?.Delete();
+            RemoveElement(selectedEdge);
             selectedEdge = null;
         }
         public void DirectedEdgeToolSelected()
@@ -126,7 +126,7 @@ namespace Seven_Bridges.Controls
             MouseLeftButtonDown -= DirectedEdgeStart;
             MouseMove -= ConnectOnMouseMove;
             MouseLeftButtonDown -= ConnectEnd;
-            selectedEdge?.Delete();
+            RemoveElement(selectedEdge);
             selectedEdge = null;
         }
         public void ShortestPathSelected()
@@ -145,19 +145,22 @@ namespace Seven_Bridges.Controls
                 case Key.OemPlus:
                     Scale(zoomInFactor);
                     break;
+
                 // - to zoom out
                 case Key.Subtract:
                 case Key.OemMinus:
                     Scale(zoomOutFactor);
                     break;
+
                 // Enter to reset zoom scale and canvas position 
                 case Key.Enter:
                     ResetPosition();
                     ResetScale();
                     break;
+
                 // Undo
                 case Key.Z:
-                    undoStack.Pop();
+                    UndoAction(undoStack.Pop());
                     break;
             }
         }
@@ -232,11 +235,28 @@ namespace Seven_Bridges.Controls
             if (isToolInputBlocked) return;
             if (eventArgs.Source is Vertex vertex)
             {
-                vertex.Delete();
+                RemoveElement(vertex);
             }
             else if (eventArgs.Source is Edge edge)
             {
-                edge.Delete();
+                RemoveElement(edge);
+            }
+        }
+
+        private void RemoveElement(UIElement element, object parameter=null)
+        {
+            Children.Remove(element);
+            switch (element)
+            {
+                case Vertex vertex:
+                    foreach (Edge edge in vertex.Edges) RemoveElement(edge, vertex);
+                    vertex.Delete();
+                    return;
+
+                case Edge edge:
+                    if (edge == selectedEdge) undoStack.Pop();
+                    edge.Delete(parameter as Vertex);
+                    return;
             }
         }
         #endregion
@@ -298,7 +318,7 @@ namespace Seven_Bridges.Controls
 
             if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeHead(selectedEdge)) || isToolInputBlocked)
             {
-                selectedEdge.Delete();
+                RemoveElement(selectedEdge);
             }
             selectedEdge = null;
         }
@@ -342,6 +362,23 @@ namespace Seven_Bridges.Controls
             scaleTransform.ScaleY = 1;
         }
         #endregion
+
+        private void UndoAction(Action action)
+        {
+            switch (action)
+            {
+                case AddVertex_Action addVertex_Action:
+                    RemoveElement(addVertex_Action.addedVertex);
+                    return;
+
+                case AddEdge_Action addEdge_Action:
+                    RemoveElement(addEdge_Action.addedEdge);
+                    return;
+
+                default:
+                    return;
+            }
+        }
 
         /// <summary>To find the shortest path between two vertices, first click on start point, then on end point. Or anywhere else to cancel.</summary>
         public void ShortestPathPointSelector(object sender, MouseButtonEventArgs eventArgs)

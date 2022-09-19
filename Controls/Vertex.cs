@@ -186,15 +186,15 @@ namespace Seven_Bridges.Controls
         }
         #endregion
 
-        /// <summary>Remove self from canvas and delete every refrence to self.</summary>
+        /// <summary>Delete every refrence to self.</summary>
         public void Delete()
         {
-            foreach (Edge edge in Edges)
-            {
-                edge.Delete(this);
-            }
+            //foreach (Edge edge in Edges)
+            //{
+            //    edge.Delete(this);
+            //}
             Edges.Clear();
-            (Parent as Panel).Children.Remove(this);
+            //(Parent as Panel)?.Children.Remove(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
