@@ -61,7 +61,8 @@
     <DockPanel Background="LightGray" LastChildFill="True" KeyDown="KeyCommand">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Nothing here yet"/>
+                <MenuItem Header="Undo" Click="Undo_Click"/>
+                <MenuItem Header="More to come..."/>
             </MenuItem>
             <MenuItem Header="New Graph">
                 <MenuItem Header="Nothing here yet"/>

@@ -1,10 +1,11 @@
 ﻿using System;
 using Seven_Bridges.Controls;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Seven_Bridges
 {
-    /// <summary>Linked list of limited length that behaves like a stack. Keeps last 'maxHistoryLength' actions performed on a canvas.</summary>
+    /// <summary>Linked list of limited length that behaves like a stack. Keeps last 'maxHistoryLength' actions performed on a GraphCanvas.</summary>
     class UndoStack
     {
         private int maxHistoryLength;
@@ -33,7 +34,7 @@ namespace Seven_Bridges
         {
             if (ActionHistory.Count > 0)
             {
-                //ActionHistory.Last.Value.Undo();
+                ActionHistory.Last.Value.Undo();
                 Action lastAction = ActionHistory.Last.Value;
                 ActionHistory.RemoveLast();
                 return lastAction;
@@ -58,30 +59,49 @@ namespace Seven_Bridges
 
     class AddVertex_Action : Action
     {
-        public readonly Vertex addedVertex;
+        public readonly Vertex AddedVertex;
+
         public AddVertex_Action(Vertex vertex)
         {
-            addedVertex = vertex;
+            AddedVertex = vertex;
         }
 
-        public override void Undo()
-        {
-            //addedVertex.Delete();
-        }
+        public override void Undo() { }
     }
 
     class AddEdge_Action : Action
     {
-        public readonly Edge addedEdge;
+        public readonly Edge AddedEdge;
+
         public AddEdge_Action(Edge edge)
         {
-            addedEdge = edge;
+            AddedEdge = edge;
         }
 
-        public override void Undo()
+        public override void Undo() { }
+    }
+
+    class DeleteVertex_Action : Action
+    {
+        public readonly Vertex DeletedVertex;
+
+        public DeleteVertex_Action(Vertex vertex)
         {
-            //addedEdge.Delete();
-            var ss = new Stack<int>();
+            DeletedVertex = vertex;
         }
+
+        public override void Undo() { }
+    }
+
+    class DeleteEdge_Action : Action
+    {
+        public readonly Edge DeletedEdge;
+
+        public DeleteEdge_Action(Edge edge)
+        {
+            DeletedEdge = edge;
+        }
+
+        public override void Undo() { }
     }
 }

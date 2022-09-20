@@ -63,15 +63,20 @@ namespace Seven_Bridges
         }
 
 
-        private void ShowComponentCount(object sender, RoutedEventArgs e)
+        private void ShowComponentCount(object sender, RoutedEventArgs eventArgs)
         {
             MessageBox.Show($"Components: {Algorithms.ComponentCount(MyCanvas)}");
         }
 
-        private void ShortestPathCalled(object sender, RoutedEventArgs e)
+        private void ShortestPathCalled(object sender, RoutedEventArgs eventArgs)
         {
             MessageBox.Show("First click on starting vertex, then on destination. To cancel the opertation, click anywhere else.");
             MyCanvas.ShortestPathSelected();
+        }
+
+        private void Undo_Click(object sender, RoutedEventArgs eventArgs)
+        {
+            MyCanvas.UndoAction();
         }
     }
 }

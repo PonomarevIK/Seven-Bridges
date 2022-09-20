@@ -160,7 +160,7 @@ namespace Seven_Bridges.Controls
 
                 // Undo
                 case Key.Z:
-                    UndoAction(undoStack.Pop());
+                    UndoAction();
                     break;
             }
         }
@@ -209,13 +209,13 @@ namespace Seven_Bridges.Controls
         #endregion
 
         #region Add & Delete
-        public void AddChild(UIElement element)
+        private void AddChild(UIElement element, bool addToUndoStack = true)
         {
-            if (element is Vertex vertex)
+            if (addToUndoStack && element is Vertex vertex)
             {
                 undoStack.Push(new AddVertex_Action(vertex));
             }
-            else if (element is Edge edge)
+            else if (addToUndoStack && element is Edge edge)
             {
                 undoStack.Push(new AddEdge_Action(edge));
             }
@@ -235,10 +235,12 @@ namespace Seven_Bridges.Controls
             if (isToolInputBlocked) return;
             if (eventArgs.Source is Vertex vertex)
             {
+                undoStack.Push(new DeleteVertex_Action(vertex));
                 RemoveElement(vertex);
             }
             else if (eventArgs.Source is Edge edge)
             {
+                undoStack.Push(new DeleteEdge_Action(edge));
                 RemoveElement(edge);
             }
         }
@@ -250,7 +252,6 @@ namespace Seven_Bridges.Controls
             {
                 case Vertex vertex:
                     foreach (Edge edge in vertex.Edges) RemoveElement(edge, vertex);
-                    vertex.Delete();
                     return;
 
                 case Edge edge:
@@ -292,7 +293,7 @@ namespace Seven_Bridges.Controls
             MouseMove += ConnectOnMouseMove;
 
             AddChild(selectedEdge);
-            v1.TryAddEdgeTail(selectedEdge);
+            v1.TryAddEdgeFrom(selectedEdge);
         }
 
         private void ConnectOnMouseMove(object sender, MouseEventArgs eventArgs)
@@ -316,7 +317,7 @@ namespace Seven_Bridges.Controls
             MouseMove -= ConnectOnMouseMove;
             MouseLeftButtonDown -= ConnectEnd;
 
-            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeHead(selectedEdge)) || isToolInputBlocked)
+            if (!(eventArgs.Source is Vertex v2 && v2.TryAddEdgeTo(selectedEdge)) || isToolInputBlocked)
             {
                 RemoveElement(selectedEdge);
             }
@@ -363,16 +364,31 @@ namespace Seven_Bridges.Controls
         }
         #endregion
 
-        private void UndoAction(Action action)
+        public void UndoAction()
         {
+            Action action = undoStack.Pop();
             switch (action)
             {
                 case AddVertex_Action addVertex_Action:
-                    RemoveElement(addVertex_Action.addedVertex);
+                    RemoveElement(addVertex_Action.AddedVertex);
                     return;
 
                 case AddEdge_Action addEdge_Action:
-                    RemoveElement(addEdge_Action.addedEdge);
+                    RemoveElement(addEdge_Action.AddedEdge);
+                    return;
+
+                case DeleteVertex_Action deleteVertex_Action:
+                    AddChild(deleteVertex_Action.DeletedVertex, false);
+                    foreach(var edge in deleteVertex_Action.DeletedVertex.Edges)
+                    {
+                        AddChild(edge, false);
+                        edge.Restore();
+                    }
+                    return;
+
+                case DeleteEdge_Action deleteEdge_Action:
+                    AddChild(deleteEdge_Action.DeletedEdge, false);
+                    deleteEdge_Action.DeletedEdge.Restore();
                     return;
 
                 default:

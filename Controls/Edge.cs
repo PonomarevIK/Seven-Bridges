@@ -146,11 +146,12 @@ namespace Seven_Bridges.Controls
             MouseLeave += Unfocus;
             PreviewTextInput += ValidateWeightInput;
         }
-        public Edge(Vertex tail, Vertex head, GraphCanvas parent) : this()
+        public Edge(Vertex v1, Vertex v2, float weight, bool isDirected) : this()
         {
-            V1 = tail;
-            V2 = head;
-            parent.AddChild(this);
+            V1 = v1;
+            V2 = v2;
+            Weight = weight;
+            IsDirected = isDirected;
         }
 
         private void OnHover(object sender, MouseEventArgs eventArgs)
@@ -171,20 +172,21 @@ namespace Seven_Bridges.Controls
             }
         }
 
-        /// <summary>Delete every refrence to self.</summary>
         public void Delete(Vertex sourceVertex = null)
         {
-            if (v1 != null && v1 != sourceVertex)
+            if (v1 != sourceVertex)
             {
-                v1.Edges.Remove(this);
-                v1 = null;
+                v1?.Edges.Remove(this);
             }
-            if (v2 != null && v2 != sourceVertex)
+            if (v2 != sourceVertex)
             {
-                v2.Edges.Remove(this);
-                v2 = null;
+                v2?.Edges.Remove(this);
             }
-            //(Parent as Panel)?.Children.Remove(this);
+        }
+        public void Restore()
+        {
+            this.V1.TryAddEdgeFrom(this);
+            this.V2.TryAddEdgeTo(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

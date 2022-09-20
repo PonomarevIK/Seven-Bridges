@@ -53,13 +53,15 @@ namespace Seven_Bridges.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Vertex), new FrameworkPropertyMetadata(typeof(Vertex)));
         }
         /// <summary>Create a new vertex with specified position (x, y).</summary>
-        public Vertex(double x, double y)
+        public Vertex(double x, double y, string name = null)
         {
             DataContext = this;
             position = new Point(x - Diameter / 2, y - Diameter / 2);
-            Content = Index++;
+            Content = name ?? Index++.ToString();
             MouseRightButtonDown += ShowRenameDialogBox;
         }
+
+
         public void ShowRenameDialogBox(object sender, MouseButtonEventArgs eventArgs)
         {
             var renamePrompt = new TextPrompt("Rename vertex to:");
@@ -125,7 +127,7 @@ namespace Seven_Bridges.Controls
         }
 
         /// <summary>Tries to connect an edge TO this vertex. Retirns true on success.</summary>
-        public bool TryAddEdgeHead(Edge edge)
+        public bool TryAddEdgeTo(Edge edge)
         {
             if (edge.V1.IsConnectedTo(this)) return false;
             else if (this.IsConnectedTo(edge.V1, out Edge connectingEdge))
@@ -139,7 +141,7 @@ namespace Seven_Bridges.Controls
             return true;
         }
         /// <summary>Tries to connect an edge FROM this vertex. Retirns true on success.</summary>
-        public bool TryAddEdgeTail(Edge edge)
+        public bool TryAddEdgeFrom(Edge edge)
         {
             Edges.Add(edge);
             edge.V1 = this;
@@ -185,17 +187,6 @@ namespace Seven_Bridges.Controls
             Canvas.SetZIndex(this, 0);
         }
         #endregion
-
-        /// <summary>Delete every refrence to self.</summary>
-        public void Delete()
-        {
-            //foreach (Edge edge in Edges)
-            //{
-            //    edge.Delete(this);
-            //}
-            Edges.Clear();
-            //(Parent as Panel)?.Children.Remove(this);
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
