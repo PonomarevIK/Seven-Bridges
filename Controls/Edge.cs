@@ -42,6 +42,8 @@ namespace Seven_Bridges.Controls
             }
         }
 
+        public delegate void ValueChangedHandler(Edge edge, object prevValue);
+
         // Edge endpoint follows the mouse cursor until it is connected to a vertex
         private double? followMouseX;
         public double FollowMouseX
@@ -64,6 +66,7 @@ namespace Seven_Bridges.Controls
             }
         }
 
+        public event ValueChangedHandler WeightChanged;
         private float? weight;
         public float Weight
         {
@@ -81,13 +84,15 @@ namespace Seven_Bridges.Controls
             get => Weight.ToString();
             set
             {
+                float prevWeight = Weight;
                 try
                 {
                     Weight = Convert.ToSingle(value, CultureInfo.InvariantCulture);
+                    if (Weight != prevWeight) WeightChanged?.Invoke(this, prevWeight);
                 }
                 catch (FormatException)
                 {
-                    Weight = 1;
+                    Weight = prevWeight;
                 }
             }
         }
@@ -171,6 +176,7 @@ namespace Seven_Bridges.Controls
                 eventArgs.Handled = true;
             }
         }
+
 
         public void Delete(Vertex sourceVertex = null)
         {

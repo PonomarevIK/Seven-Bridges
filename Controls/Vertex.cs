@@ -23,6 +23,8 @@ namespace Seven_Bridges.Controls
         /// <summary>List of all edges to and from this vertex.</summary>
         public List<Edge> Edges = new List<Edge>();
 
+        public delegate void ValueChangedHandler(Vertex vertex, object prevValue);
+
         // Control position on canvas
         private Point position;
         public double X
@@ -62,12 +64,17 @@ namespace Seven_Bridges.Controls
         }
 
 
+        public event ValueChangedHandler NameChanged;
         public void ShowRenameDialogBox(object sender, MouseButtonEventArgs eventArgs)
         {
             var renamePrompt = new TextPrompt("Rename vertex to:");
             if (renamePrompt.ShowDialog() == true)
             {
-                Content = renamePrompt.ResponseText;
+                string prevName = (string)Content;
+                string newName = renamePrompt.ResponseText;
+                
+                Content = newName;
+                if (prevName != newName) NameChanged?.Invoke(this, prevName);
             }
         }
 

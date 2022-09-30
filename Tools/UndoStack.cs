@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Seven_Bridges
 {
-    /// <summary>Linked list of limited length that behaves like a stack. Keeps last 'maxHistoryLength' actions performed on a GraphCanvas.</summary>
+    /// <summary>Linked list of limited length designed to behave like a stack. Keeps last 'maxHistoryLength' actions performed on a GraphCanvas.</summary>
     class UndoStack
     {
         private int maxHistoryLength;
@@ -53,7 +53,7 @@ namespace Seven_Bridges
 
     abstract class Action
     {
-        public abstract void Undo();
+        public abstract void Undo();  // Might be used in the future
     }
 
 
@@ -100,6 +100,34 @@ namespace Seven_Bridges
         public DeleteEdge_Action(Edge edge)
         {
             DeletedEdge = edge;
+        }
+
+        public override void Undo() { }
+    }
+
+    class ChangeEdgeWeight_Action : Action
+    {
+        public readonly Edge Edge;
+        public readonly float PreviousWeight;
+
+        public ChangeEdgeWeight_Action(Edge edge, float prevWeight)
+        {
+            Edge = edge;
+            PreviousWeight = prevWeight;
+        }
+
+        public override void Undo() { }
+    }
+
+    class ChangeVertexName_Action : Action
+    {
+        public readonly Vertex Vertex;
+        public readonly string PreviousName;
+
+        public ChangeVertexName_Action(Vertex vertex, string previousName)
+        {
+            Vertex = vertex;
+            PreviousName = previousName;
         }
 
         public override void Undo() { }

@@ -168,6 +168,17 @@ namespace Seven_Bridges.Controls
         public void BlockToolInput() => isToolInputBlocked = true;
         public void UnblockToolInput() => isToolInputBlocked = false;
 
+        /// <summary>Is called when an edge's weight value is successfuly changed. Adds this change to the undo stack.</summary>
+        public void OnEdgeWeightChanged(Edge edge, object prevWeight)
+        {
+            undoStack.Push(new ChangeEdgeWeight_Action(edge, (float)prevWeight));
+        }
+        /// <summary>Is called when a vertex's name is successfuly changed. Adds this change to the undo stack.</summary>
+        public void OnVertexNameChanged(Vertex vertex, object prevName)
+        {
+            undoStack.Push(new ChangeVertexName_Action(vertex, (string)prevName));
+        }
+
         #region Drag
         private void CanvasGrab(object sender, MouseButtonEventArgs eventArgs)
         {
@@ -211,13 +222,15 @@ namespace Seven_Bridges.Controls
         #region Add & Delete
         private void AddChild(UIElement element, bool addToUndoStack = true)
         {
-            if (addToUndoStack && element is Vertex vertex)
+            if (element is Vertex vertex)
             {
-                undoStack.Push(new AddVertex_Action(vertex));
+                if (addToUndoStack) undoStack.Push(new AddVertex_Action(vertex));
+                vertex.NameChanged += OnVertexNameChanged;
             }
-            else if (addToUndoStack && element is Edge edge)
+            else if (element is Edge edge)
             {
-                undoStack.Push(new AddEdge_Action(edge));
+                if (addToUndoStack) undoStack.Push(new AddEdge_Action(edge));
+                edge.WeightChanged += OnEdgeWeightChanged;   
             }
 
             Children.Add(element);
@@ -236,11 +249,13 @@ namespace Seven_Bridges.Controls
             if (eventArgs.Source is Vertex vertex)
             {
                 undoStack.Push(new DeleteVertex_Action(vertex));
+                vertex.NameChanged -= OnVertexNameChanged;
                 RemoveElement(vertex);
             }
             else if (eventArgs.Source is Edge edge)
             {
                 undoStack.Push(new DeleteEdge_Action(edge));
+                edge.WeightChanged -= OnEdgeWeightChanged;
                 RemoveElement(edge);
             }
         }
@@ -389,6 +404,14 @@ namespace Seven_Bridges.Controls
                 case DeleteEdge_Action deleteEdge_Action:
                     AddChild(deleteEdge_Action.DeletedEdge, false);
                     deleteEdge_Action.DeletedEdge.Restore();
+                    return;
+
+                case ChangeEdgeWeight_Action changeEdgeWeight_Action:
+                    changeEdgeWeight_Action.Edge.Weight = changeEdgeWeight_Action.PreviousWeight;
+                    return;
+
+                case ChangeVertexName_Action changeVertexName_Action:
+                    changeVertexName_Action.Vertex.Content = changeVertexName_Action.PreviousName;
                     return;
 
                 default:

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Seven_Bridges.Controls"
         mc:Ignorable="d"
-        Title="Graph App"
+        Title="Seven Bridges"
         Loaded="InitializeWindow"
         Height="600" Width="900">
     <Window.Resources>
