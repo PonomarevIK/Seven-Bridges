@@ -72,6 +72,9 @@
                 <MenuItem Header="Shortest path" Click="ShortestPathCalled"/>
                 <MenuItem Header="More to come..."/>
             </MenuItem>
+            <MenuItem Header="About">
+                <MenuItem Header="How to use" Click="ShowInstructionsWindow"/>
+            </MenuItem>
         </Menu>
 
         <StackPanel DockPanel.Dock="Left" Style="{StaticResource ToolPanel}">

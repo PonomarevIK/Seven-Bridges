@@ -1,0 +1,43 @@
+﻿<Window x:Class="Seven_Bridges.InstructionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="How to use" 
+        Width="400" ResizeMode="NoResize"
+        SizeToContent="Height">
+    <Grid>
+        <Border Margin="10" BorderBrush="LightGray" BorderThickness="1">
+            <TextBlock Margin="5" TextWrapping="Wrap">
+                Controls:
+                <LineBreak/>
+                <Run FontWeight="Bold">Mouse wheel</Run> or <Run FontWeight="Bold">+/-</Run> to zoom in/out.
+                <LineBreak/>
+                <Run FontWeight="Bold">Enter</Run> to reset ganvas scale and position.
+                <LineBreak/>
+                <Run FontWeight="Bold">Number keys</Run> to select a tool.
+                <LineBreak/>
+                <Run FontWeight="Bold">Z key</Run> to undo your last action.
+                <LineBreak/>
+                <Run FontWeight="Bold">Right click</Run> on a vertex to rename it.
+                <LineBreak/>
+                <Run FontWeight="Bold">Left click</Run> an edge's weight box to change it's value (weight boxes with default value of 1 are shown only on hover).
+                
+                <LineBreak/>
+                <LineBreak/>
+                Tools:
+                <LineBreak/>
+                [1] Drag 🤚 - grab the canvas or a vertex and drag it around.
+                <LineBreak/>
+                [2] Add Vertex ➕ - click anywhere on the canvas to add a new vertex.
+                <LineBreak/>
+                [3] Delete ❌ - click on a vertex/edge to delete it.
+                <LineBreak/>
+                [4] Undirected Edge ➖ - click on a vertex, then on another one to connect them with an undirected edge. Or click anywhere else to cancel.
+                <LineBreak/>
+                [5] Directed Edge ➞ - same as a previous tool but connects with a one-way directed edge.
+            </TextBlock>
+        </Border>
+    </Grid>
+</Window>

@@ -78,5 +78,10 @@ namespace Seven_Bridges
         {
             MyCanvas.UndoAction();
         }
+
+        private void ShowInstructionsWindow(object sender, RoutedEventArgs eventArgs)
+        {
+            new InstructionsWindow().Show();
+        }
     }
 }

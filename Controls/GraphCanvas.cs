@@ -284,8 +284,7 @@ namespace Seven_Bridges.Controls
             if (eventArgs.Source is Vertex v1)
             {
                 MouseLeftButtonDown -= DirectedEdgeStart;
-                selectedEdge = new Edge();
-                selectedEdge.IsDirected = true;
+                selectedEdge = new Edge() { IsDirected = true };
                 ConnectStart(v1);
             }
         }
@@ -296,8 +295,7 @@ namespace Seven_Bridges.Controls
             if (eventArgs.Source is Vertex v1)
             {
                 MouseLeftButtonDown -= UndirectedEdgeStart;
-                selectedEdge = new Edge();
-                selectedEdge.IsDirected = false;
+                selectedEdge = new Edge() { IsDirected = false };
                 ConnectStart(v1);
             }
         }
